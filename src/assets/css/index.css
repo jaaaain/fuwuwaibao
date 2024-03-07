@@ -1,0 +1,211 @@
+body {
+    background-color: #303030;
+}
+
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 60px;
+    width: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    float: left;
+    margin: 0 8%;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: "Courier New", Courier, monospace;
+}
+
+/* ========================= 导航栏 ============================== */
+.navigation {
+    display: flex;
+    align-items: center;
+    margin: 0 4%;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    display: inline-block;
+}
+
+.navigation a {
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.navigation li:first-child a {
+    color: white;
+    padding-bottom: 6px;
+    border-bottom: 3px solid white;
+}
+
+.navigation>li {
+    margin: 0 20px;
+}
+
+/* ============================================================ */
+.footer {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    width: 100%;
+    font-size: small;
+    margin: 0 auto;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.395);
+}
+
+/* ======================== 主体部分 ================================ */
+/* 首页 */
+.main-tital {
+    margin: 130px auto;
+}
+
+.main-tital .tital {
+    display: block;
+    margin: 10px;
+    padding: 50px;
+    text-align: center;
+    font-size: larger;
+    color: white;
+}
+
+/* 其他 */
+.main {
+    position: relative;
+    top: 130px;
+    margin: 0 auto;
+    width: 50%;
+    height: 450px;
+    padding: 30px 10px;
+    background-color: rgb(100, 111, 114);
+}
+
+/* 头部 */
+.main-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 45px;
+    width: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    /* 设置内容均匀分布 */
+    align-items: center;
+    background-color: rgb(74, 86, 79);
+    color: white;
+}
+
+.main-header .el-icon-close {
+    color: white;
+    padding: 9px;
+    margin: 3px;
+    cursor: pointer;
+    /* 将鼠标指针的样式设置为一个手指形状，表示用户可以点击该元素进行交互。 */
+    align-items: center;
+    font-size: 14px;
+}
+
+.main-header .tital {
+    font-size: 15px;
+    margin: auto;
+}
+
+/* 主体部分内容块 */
+.container {
+    width: 95%;
+    margin: 45px auto;
+    text-align: center;
+}
+
+/* 表格 */
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 10px auto;
+    color: white;
+    width: 100%;
+}
+
+tr {
+    display: flex;
+}
+
+th,
+td {
+    width: 100%;
+    border: 1px solid;
+    font-weight: 100;
+    display:block;
+    line-height: 40px;
+    white-space: nowrap; /* 不换行 */
+    overflow: hidden;
+    text-overflow:ellipsis;    
+}
+
+/* ============================ 按钮 =============================== */
+.button-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+/* 按钮样式 */
+.button {
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf50;
+    color: white;
+    padding: 13px 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 17px;
+    margin: 5px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.button-box li:first-child .button {
+    background-color: white;
+    color: #4caf50;
+    border: 1px solid #4caf50;
+}
+
+/* 按钮悬停样式 */
+.button:hover {
+    background-color: #45a049;
+}
+
+.button-box li:first-child .button:hover {
+    background-color: rgba(255, 255, 255, 0.946);
+}
+
+.button-box input[type="file"] {
+    display: none;
+}
+
+#button4,
+#button3 {
+    border-radius: 4px;
+    font-size: 15px;
+    padding: 10px 30px;
+}
+
+/* ============================================================ */
+
+h2 {
+    margin-bottom: 20px;
+}
