@@ -56,6 +56,7 @@ export default {
           name: file.name,
           type: file.type,
           size: file.size,
+          file: file,
         };
         this.fileList.push(fileInfo);
       }
@@ -69,7 +70,6 @@ export default {
       if (this.fileList.length == 0) {
         alert("文件为空，请选择要上传的文件");
       } else {
-        const formData = new FormData();
         let flag = true;
         for (let i = 0; i < this.fileList.length; i++) {
           const file = this.fileList[i];
@@ -78,16 +78,9 @@ export default {
             alert("文件类型错误，请重新选择文件");
             break;
           } else {
-            formData.append('files', file);
-            console.log(formData);
-          }
-        }
-        if (flag) {
+           if (flag) {
           // 发送文件上传请求
-          axios.post('/data', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+          axios.post('http://127.0.0.1:8081/data', file, {
           }).then(response => {
             console.log('文件上传成功' + response);
           }).catch(error => {
@@ -95,6 +88,9 @@ export default {
           })
 
         }
+          }
+        }
+
       }
 
     }
