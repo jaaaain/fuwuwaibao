@@ -71,14 +71,25 @@ export default {
         alert("文件为空，请选择要上传的文件");
         return; // 停止执行
       }
-      const formData = new FormData(); // 创建 FormData 对象
+
       let allFilesAreCsv = true;
       this.fileList.forEach((fileInfo) => {
         if (fileInfo.type !== 'text/csv') {
           allFilesAreCsv = false;
           alert("文件类型错误，请重新选择文件");
         } else {
+          const formData = new FormData(); // 创建 FormData 对象
           formData.append('files', fileInfo.file); // 添加文件到 FormData
+          // 发送文件上传请求
+          axios.post('http://127.0.0.1:8081/data', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data' // 设置正确的头信息
+            }
+          }).then(response => {
+            console.log('文件上传成功', response);
+          }).catch(error => {
+            console.error('文件上传失败：', error);
+          });
         }
       });
 
@@ -86,16 +97,7 @@ export default {
         return; // 如果任何文件类型错误，则停止执行
       }
 
-      // 发送文件上传请求
-      axios.post('http://127.0.0.1:8081/data', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data' // 设置正确的头信息
-        }
-      }).then(response => {
-        console.log('文件上传成功', response);
-      }).catch(error => {
-        console.error('文件上传失败：', error);
-      });
+
     }
   }, //方法集合
   mounted() { }, //生命周期 - 挂载完成

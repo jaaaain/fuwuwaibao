@@ -19,9 +19,9 @@ def handle_data():
         # 这里直接打印文件名和文件内容
         print(file.filename)
         # 保存文件到指定路径
+        filename=file.filename
         if not os.path.exists(UPLOAD_FOLDER):
             os.makedirs(UPLOAD_FOLDER)
-        filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return jsonify({'message': 'File uploaded successfully'})
         # else:
