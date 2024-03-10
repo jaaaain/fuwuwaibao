@@ -25,7 +25,7 @@ class my_model:
     @classmethod
     def load(cls, path):
         return joblib.load(path)
-model = my_model.load("model/my_model.dat")
+model = joblib.load("model/my_model.dat")
 app = Flask(__name__)
 CORS(app)  # 允许跨域请求
 # 上传文件保存的目录
