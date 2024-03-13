@@ -86,7 +86,7 @@ export default {
               'Content-Type': 'multipart/form-data' // 设置正确的头信息
             }
           }).then(response => {
-            console.log('文件上传成功', response);
+            alert('文件上传成功', response);
           }).catch(error => {
             console.error('文件上传失败：', error);
           });
@@ -96,7 +96,7 @@ export default {
       if (!allFilesAreCsv) {
         return; // 如果任何文件类型错误，则停止执行
       }
-
+      this.$router.push("/predict");
 
     }
   }, //方法集合

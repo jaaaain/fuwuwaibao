@@ -17,6 +17,12 @@
                         </tr>
                     </thead>
                     <tbody id="predictList">
+                        <tr v-for="(file, index) in predictList" :key="index">
+                            <td>{{ index }}</td>
+                            <td>{{ file.pred }}</td>
+                            <td>{{ file.pos_rate }}</td>
+                            <td>{{ file.neg_rate }}</td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="button-box">
@@ -29,6 +35,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 // import axios from "axios";
 //这里导入其他文件
 export default {
@@ -43,7 +51,14 @@ export default {
         downloadFiles() { }
     }, //方法集合
     mounted() { // 显示数据
-
+        axios.get('http://127.0.0.1:8081/result')
+            .then(Response => {
+                this.predictList = Response.data;
+                console.log(this.predictList);
+            })
+            .catch(error => {
+                console.log("error:", error);
+            });
     }, //生命周期 - 挂载完成
 };
 </script>
