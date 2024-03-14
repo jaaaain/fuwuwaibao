@@ -12,16 +12,15 @@
             <tr>
               <th>ID</th>
               <th>预测结果</th>
-              <th>正向概率</th>
+              <th>个人编码</th>
               <th>负向概率</th>
             </tr>
           </thead>
           <tbody id="predictList">
-            <tr v-for="(item, index) in predictList.value" :key="index">
+            <tr v-for="(item, index) in predictList" :key="index">
               <td>{{index}}</td>
               <td>{{ item.res}}</td>
               <td>{{ item['个人编码'] }}</td>
-              <td>{{ item['负向概率'] }}</td>
             </tr>
           </tbody>
         </table>
@@ -70,8 +69,8 @@ export default {
     fetchData() { // 获取预测结果数据
       axios.post('http://127.0.0.1:5000/predict_view')
         .then(response => {
-          this.predictList.value = response.data.first_eight_rows;
-          console.log(this.predictList.value);
+          this.predictList = response.data.first_eight_rows;
+          console.log(this.predictList);
         })
         .catch(error => {
           console.log("Error fetching data:", error);
