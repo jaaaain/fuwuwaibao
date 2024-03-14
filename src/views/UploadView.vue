@@ -81,12 +81,13 @@ export default {
           const formData = new FormData(); // 创建 FormData 对象
           formData.append('files', fileInfo.file); // 添加文件到 FormData
           // 发送文件上传请求
-          axios.post('http://127.0.0.1:8081/data', formData, {
+          axios.post('http://127.0.0.1:5000/data', formData, {
             headers: {
               'Content-Type': 'multipart/form-data' // 设置正确的头信息
             }
           }).then(response => {
             alert('文件上传成功', response);
+            this.$router.push("/predict");
           }).catch(error => {
             console.error('文件上传失败：', error);
           });
@@ -96,7 +97,7 @@ export default {
       if (!allFilesAreCsv) {
         return; // 如果任何文件类型错误，则停止执行
       }
-      this.$router.push("/predict");
+
 
     }
   }, //方法集合

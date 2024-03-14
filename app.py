@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify,render_template
+from flask import Flask, request, jsonify,render_template, send_file
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 import joblib
 import pandas as pd
 import numpy as np
+import chardet
 class my_model:
     def __init__(self, cat=None, xgb=None, lgb=None, RFC=None):
         self.cat = cat
@@ -24,7 +25,7 @@ class my_model:
 
     @classmethod
     def load(cls, path):
-        return joblib.load(path)
+        return joblib.load(path)#特殊的模型处理
 model = joblib.load("model/my_model.dat")
 app = Flask(__name__)
 CORS(app)  # 允许跨域请求
@@ -33,8 +34,10 @@ UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+# 全局变量保存文件地址
+file_path = None
 @app.route('/data', methods=['POST'])
-def handle_data():#修改成三个数据
+def get_data():
     try:
         # if 'files' in request.files:
             # 获取上传的文件数据
@@ -42,11 +45,24 @@ def handle_data():#修改成三个数据
         file = request.files['files']
         # 处理文件数据，例如保存到本地或者进行其他操作
 
+        return handle_data(file)
+    except Exception as e:
+        print('处理请求时发生异常：', e)
+        return jsonify({'error': '处理请求时发生异常'}),400
+def handle_data(file):
+    try:
+        print('handling')
         filename = file.filename
+        global file_path  # 使用全局变量保存文件地址
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
-        # 读取上传的文件内容并转换为模型输入格式（假设为CSV文件）
-        df = pd.read_csv(file_path, encoding='gbk')
+        # 使用 chardet 检测文件编码
+        with open(file_path, 'rb') as f:
+            result = chardet.detect(f.read())
+        # 输出检测结果
+        print(result['encoding'])
+        # 使用检测结果的编码方式读取文件
+        df = pd.read_csv(file_path, encoding=result['encoding'])
         #特征处理
         df['月就诊天数_SUM'] = df['月就诊天数_AVG'] * df['就诊的月数']
         df['max占最大月的百分比'] = df['月统筹金额_MAX'] /df['统筹支付金额_SUM']
@@ -69,6 +85,43 @@ def handle_data():#修改成三个数据
     except Exception as e:
         print('处理请求时发生异常：', e)
         return jsonify({'error': '处理请求时发生异常'}),600
+@app.route('/predict_view', methods=['POST'])
+def Predict_view():
+    try:
+        global file_path  # 使用全局变量获取文件地址
+        if file_path is None:
+            return jsonify({'error': '文件地址为空，请先上传文件'}), 400
+        # 使用 chardet 检测文件编码
+        with open(file_path, 'rb') as f:
+            result = chardet.detect(f.read())
+        # 输出检测结果
+        print(result['encoding'])
+        # 使用检测结果的编码方式读取文件
+        feature_columns = ['个人编码','res']
+        df = pd.read_csv(file_path, encoding=result['encoding'], usecols=feature_columns)
+        # 读取上传的文件内容并转换为模型输入格式（假设为CSV文件）
+        # 获取前八行数据并返回
+        first_eight_rows = df.head(8).to_dict(orient='records')
+        return jsonify({'first_eight_rows': first_eight_rows})
+    except Exception as e:
+        print('处理获取前八行数据请求时发生异常：', e)
+        return jsonify({'error': '处理获取前八行数据请求时发生异常'}), 500
+
+# 路由处理文件下载请求
+@app.route('/download-file', methods=['GET'])
+def download_file():
+    try:
+        # 获取要下载的文件路径（假设是最新上传的文件）
+        files = os.listdir(app.config['UPLOAD_FOLDER'])
+        if files:
+            latest_file = max(files, key=os.path.getctime)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], latest_file)
+            return send_file(file_path, as_attachment=True)
+        else:
+            return jsonify({'error': '没有可下载的文件'}), 405
+    except Exception as e:
+        print('处理下载请求时发生异常：', e)
+        return jsonify({'error': '处理下载请求时发生异常'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8081)
+    app.run(debug=True, port=5000)
