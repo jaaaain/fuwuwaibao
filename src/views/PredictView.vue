@@ -21,6 +21,7 @@
               <td>{{index}}</td>
               <td>{{ item.res}}</td>
               <td>{{ item['个人编码'] }}</td>
+              <td>{{ item['个人编码'] }}</td>
             </tr>
           </tbody>
         </table>
@@ -56,7 +57,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'file.txt'); // 下载的文件名
+        link.setAttribute('download', ''); // 设置download属性，让浏览器下载URL而不是导航到它
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

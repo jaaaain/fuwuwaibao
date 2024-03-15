@@ -6,6 +6,7 @@ import joblib
 import pandas as pd
 import numpy as np
 import chardet
+from os.path import basename
 class my_model:
     def __init__(self, cat=None, xgb=None, lgb=None, RFC=None):
         self.cat = cat
@@ -110,15 +111,15 @@ def Predict_view():
 # 路由处理文件下载请求
 @app.route('/download-file', methods=['GET'])
 def download_file():
+    global file_path  # 声明file_path为全局变量
+    file_name = basename(file_path)  # 提取文件名
     try:
-        # 获取要下载的文件路径（假设是最新上传的文件）
-        files = os.listdir(app.config['UPLOAD_FOLDER'])
-        if files:
-            latest_file = max(files, key=os.path.getctime)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], latest_file)
-            return send_file(file_path, as_attachment=True)
+        if file_path is not None and os.path.exists(file_path):
+            response = send_file(file_path, as_attachment=True)
+            response.headers["Content-Disposition"] = "attachment; filename={}".format(file_name)
+            return response
         else:
-            return jsonify({'error': '没有可下载的文件'}), 405
+            return jsonify({'error': '文件不存在或未设置文件路径'}), 404
     except Exception as e:
         print('处理下载请求时发生异常：', e)
         return jsonify({'error': '处理下载请求时发生异常'}), 500
