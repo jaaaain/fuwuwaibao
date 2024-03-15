@@ -1,12 +1,14 @@
 from flask import Flask, request, jsonify,render_template, send_file
 from flask_cors import CORS
+from os.path import basename
 from werkzeug.utils import secure_filename
 import os
 import joblib
 import pandas as pd
 import numpy as np
 import chardet
-from os.path import basename
+import base64
+
 class my_model:
     def __init__(self, cat=None, xgb=None, lgb=None, RFC=None):
         self.cat = cat
@@ -115,9 +117,9 @@ def download_file():
     file_name = basename(file_path)  # 提取文件名
     try:
         if file_path is not None and os.path.exists(file_path):
-            response = send_file(file_path, as_attachment=True)
-            response.headers["Content-Disposition"] = "attachment; filename={}".format(file_name)
-            return response
+            with open(file_path, 'rb') as f:
+                file_content = base64.b64encode(f.read()).decode('utf-8')
+            return jsonify({'file_name': file_name, 'file_content': file_content})
         else:
             return jsonify({'error': '文件不存在或未设置文件路径'}), 404
     except Exception as e:

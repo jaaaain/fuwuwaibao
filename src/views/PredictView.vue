@@ -48,24 +48,26 @@ export default {
   methods: {
     // 下载结果文件
     downloadFile() {
-      this.downloading = true; // 设置下载状态为true
-      axios({
-        url: 'http://localhost:5000/download-file', // 后端提供的下载文件路由
-        method: 'GET',
-        responseType: 'blob', // 响应类型为二进制流
-      }).then(response => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', ''); // 设置download属性，让浏览器下载URL而不是导航到它
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        this.downloading = false; // 下载完成后将下载状态设为false
-      }).catch(error => {
-        console.error('Error downloading file:', error);
-        this.downloading = false; // 下载出错时也需要将下载状态设为false
-      });
+          this.downloading = true; // 设置下载状态为true
+          axios({
+            url: 'http://localhost:5000/download-file', // 后端提供的下载文件路由
+            method: 'GET',
+          }).then(response => {
+            const fileContent = atob(response.data.file_content);
+            const fileName = response.data.file_name;
+            const blob = new Blob([fileContent], {type: 'application/octet-stream'});
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            this.downloading = false; // 下载完成后将下载状态设为false
+          }).catch(error => {
+            console.error('Error downloading file:', error);
+            this.downloading = false; // 下载出错时也需要将下载状态设为false
+          });
     },
     fetchData() { // 获取预测结果数据
       axios.post('http://127.0.0.1:5000/predict_view')
