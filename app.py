@@ -46,7 +46,13 @@ def handle_data():
         file.save(file_path)
 
         # 读取上传的文件内容并转换为模型输入格式（假设为CSV文件）
-        df = pd.read_csv(file_path, encoding='gbk')
+        # df = pd.read_csv(file_path, encoding='gbk')
+        try:
+            df = pd.read_csv(file_path, encoding='gbk')
+        except Exception as e:
+            print('处理文件时发生异常：', e)
+            return jsonify({'error': '处理文件时发生异常'})
+        
         #特征处理
         df['max月统筹金占总比例'] = df['月统筹金额_MAX'] /df['统筹支付金额_SUM']
         df = df.fillna(0)
@@ -68,6 +74,30 @@ def handle_data():
     except Exception as e:
         print('处理请求时发生异常：', e)
         return jsonify({'error': '处理请求时发生异常'}),600
+    
+@app.route('/result', methods=['GET'])
+def handle_result():
+    result=[{'id':1,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':2,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':3,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
+            {'id':4,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':5,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
+            {'id':6,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
+            {'id':7,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':8,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':9,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
+            {'id':10,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':11,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':12,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':13,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
+            {'id':14,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':15,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
+            {'id':16,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
+            {'id':17,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':18,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
+            {'id':19,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
+            {'id':20,'pred':1,'pos_rate':0.75,'neg_rate':0.25}]
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8081)

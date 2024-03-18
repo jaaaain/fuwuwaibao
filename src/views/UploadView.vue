@@ -7,7 +7,7 @@
         <router-link class="el-icon-close" to="/"></router-link>
       </div>
       <div class="container">
-        <table id="fileTable" :data="tableData">
+        <table id="fileTable">
           <thead>
             <tr>
               <th>文件名称</th>
@@ -73,30 +73,30 @@ export default {
       }
 
       let allFilesAreCsv = true;
+      const formData = new FormData(); // 创建 FormData 对象
       this.fileList.forEach((fileInfo) => {
         if (fileInfo.type !== 'text/csv') {
           allFilesAreCsv = false;
           alert("文件类型错误，请重新选择文件");
         } else {
-          const formData = new FormData(); // 创建 FormData 对象
           formData.append('files', fileInfo.file); // 添加文件到 FormData
-          // 发送文件上传请求
-          axios.post('http://127.0.0.1:8081/data', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data' // 设置正确的头信息
-            }
-          }).then(response => {
-            alert('文件上传成功', response);
-          }).catch(error => {
-            console.error('文件上传失败：', error);
-          });
         }
       });
-
       if (!allFilesAreCsv) {
         return; // 如果任何文件类型错误，则停止执行
       }
-      this.$router.push("/predict");
+      // 发送文件上传请求
+      axios.post('http://127.0.0.1:8081/data', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data' // 设置正确的头信息
+        }
+      }).then(response => {
+        alert('文件上传成功', response);
+        this.$router.push("/predict");
+      }).catch(error => {
+        console.error('文件上传失败：', error);
+      });
+
 
     }
   }, //方法集合

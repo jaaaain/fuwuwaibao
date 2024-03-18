@@ -38,20 +38,7 @@ li {
     display: inline-block;
 }
 
-.navigation a {
-    letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.5);
-}
 
-.navigation li:first-child a {
-    color: white;
-    padding-bottom: 6px;
-    border-bottom: 3px solid white;
-}
-
-.navigation>li {
-    margin: 0 20px;
-}
 
 /* ============================================================ */
 .footer {
@@ -125,8 +112,13 @@ li {
 /* 主体部分内容块 */
 .container {
     width: 95%;
-    margin: 45px auto;
+    margin: 25px auto;
     text-align: center;
+}
+
+p {
+    color: white;
+    margin: 0;
 }
 
 /* 表格 */
@@ -147,11 +139,17 @@ td {
     width: 100%;
     border: 1px solid;
     font-weight: 100;
-    display:block;
+    display: block;
     line-height: 40px;
-    white-space: nowrap; /* 不换行 */
+    white-space: nowrap;
+    /* 不换行 */
     overflow: hidden;
-    text-overflow:ellipsis;    
+    text-overflow: ellipsis;
+}
+
+/* tab */
+el-tabs {
+    color: white;
 }
 
 /* ============================ 按钮 =============================== */

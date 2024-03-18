@@ -7,7 +7,8 @@
                 <router-link class="el-icon-close" to="/"></router-link>
             </div>
             <div class="container">
-                <table id="predictTable" :data="predictData">
+                <p>文件上传成功 ~ ，共 {{ predictList.length }} 条医保数据</p>
+                <table id="predictTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -17,8 +18,8 @@
                         </tr>
                     </thead>
                     <tbody id="predictList">
-                        <tr v-for="(file, index) in predictList" :key="index">
-                            <td>{{ index }}</td>
+                        <tr v-for="(file, index) in filteredPredictList" :key="index">
+                            <td>{{ file.id }}</td>
                             <td>{{ file.pred }}</td>
                             <td>{{ file.pos_rate }}</td>
                             <td>{{ file.neg_rate }}</td>
@@ -60,6 +61,11 @@ export default {
                 console.log("error:", error);
             });
     }, //生命周期 - 挂载完成
+    computed: {
+        filteredPredictList() {
+            return this.predictList.slice(0, 6); // 返回前五个元素
+        }
+    }
 };
 </script>
 

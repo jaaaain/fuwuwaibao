@@ -16,17 +16,7 @@ const routes = [
   },
   {
     path: "/predict/details",
-    redirect: "/predict/details/true"
-  },
-  {
-    path: "/predict/details/true",
-    name: "detail-true",
-    component: () =>
-      import('../views/DetailView.vue'),
-  },
-  {
-    path: "/predict/details/false",
-    name: "detail-false",
+    name: "detail",
     component: () =>
       import('../views/DetailView.vue'),
   },
