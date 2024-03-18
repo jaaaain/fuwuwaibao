@@ -1,69 +1,88 @@
 <template>
-    <el-element>
-        <app-header></app-header>
-        <div class="main">
-            <div class="main-header">
-                <p class="tital">LOGO医疗保险欺诈预测系统</p>
-                <router-link class="el-icon-close" to="/"></router-link>
-            </div>
-            <div class="container">
-                <p>文件上传成功 ~ ，共 {{ predictList.length }} 条医保数据</p>
-                <table id="predictTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>预测结果</th>
-                            <th>正向概率</th>
-                            <th>负向概率</th>
-                        </tr>
-                    </thead>
-                    <tbody id="predictList">
-                        <tr v-for="(file, index) in filteredPredictList" :key="index">
-                            <td>{{ file.id }}</td>
-                            <td>{{ file.pred }}</td>
-                            <td>{{ file.pos_rate }}</td>
-                            <td>{{ file.neg_rate }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="button-box">
-                    <button class="button" id="button3" @click="downloadFiles">下载结果</button>
-                    <router-link to="/predict/details" class="button" id="button4">详细信息</router-link>
-                </div>
-            </div>
+  <el-element>
+    <app-header></app-header>
+    <div class="main">
+      <div class="main-header">
+        <p class="title">LOGO医疗保险欺诈预测系统</p>
+        <router-link class="el-icon-close" to="/"></router-link>
+      </div>
+      <div class="container">
+        <table id="predictTable" :data="predictData">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>预测结果</th>
+              <th>个人编码</th>
+              <th>负向概率</th>
+            </tr>
+          </thead>
+          <tbody id="predictList">
+            <tr v-for="(item, index) in predictList" :key="index">
+              <td>{{index}}</td>
+              <td>{{ item.res}}</td>
+              <td>{{ item['个人编码'] }}</td>
+              <td>{{ item['个人编码'] }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="button-box">
+          <button class="button" id="downloadButton" @click="downloadFile">下载结果</button>
+          <router-link to="/predict/details" class="button" id="detailsButton">详细信息</router-link>
         </div>
-    </el-element>
+        <div v-if="downloading" class="loading">正在下载...</div>
+      </div>
+    </div>
+  </el-element>
 </template>
 
 <script>
 import axios from 'axios';
 
 export default {
-    //引入的组件注入到对象中才能使用
-    data() {
-        return {
-            predictList: [],
-        };
+  data() {
+    return {
+      predictList: [],
+      downloading: false,
+    };
+  },
+  methods: {
+    // 下载结果文件
+    downloadFile() {
+          this.downloading = true; // 设置下载状态为true
+          axios({
+            url: 'http://localhost:5000/download-file', // 后端提供的下载文件路由
+            method: 'GET',
+          }).then(response => {
+            const fileContent = atob(response.data.file_content);
+            const fileName = response.data.file_name;
+            const blob = new Blob([fileContent], {type: 'application/octet-stream'});
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            this.downloading = false; // 下载完成后将下载状态设为false
+          }).catch(error => {
+            console.error('Error downloading file:', error);
+            this.downloading = false; // 下载出错时也需要将下载状态设为false
+          });
     },
-    methods: {
-        // 下载结果
-        downloadFiles() { }
-    }, //方法集合
-    mounted() { // 显示数据
-        axios.get('http://127.0.0.1:5000/result')
-            .then(Response => {
-                this.predictList = Response.data;
-                console.log(this.predictList);
-            })
-            .catch(error => {
-                console.log("error:", error);
-            });
-    }, //生命周期 - 挂载完成
-    computed: {
-        filteredPredictList() {
-            return this.predictList.slice(0, 6); // 返回前五个元素
-        }
-    }
+    fetchData() { // 获取预测结果数据
+      axios.post('http://127.0.0.1:5000/predict_view')
+        .then(response => {
+          this.predictList = response.data.first_eight_rows;
+          console.log(this.predictList);
+        })
+        .catch(error => {
+          console.log("Error fetching data:", error);
+        });
+    },
+  },
+  mounted() {
+    this.fetchData(); // 获取数据
+  },
 };
 </script>
 
