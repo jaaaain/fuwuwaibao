@@ -7,16 +7,14 @@
                     <th>判别标准</th>
                     <th>特征描述</th>
                     <th>表现</th>
-                    <th>类型</th>
                 </tr>
             </thead>
             <tbody id="pre-predictList">
                 <tr v-for="(item, index) in displayedPredList" :key="index">
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.standard }}</td>
-                    <td>{{ item.feature }}</td>
-                    <td>{{ item.performance }}</td>
-                    <td>{{ item.type }}</td>
+                      <td>{{index}}</td>
+                      <td>{{ item.res}}</td>
+                      <td>{{ item['个人编码'] }}</td>
+                      <td>{{ item['个人编码'] }}</td>
                 </tr>
             </tbody>
         </table>
@@ -66,7 +64,7 @@ export default {
     mounted() {
         axios.get('http://127.0.0.1:5000/result')
             .then(Response => {
-                this.predictList = Response.data;
+                this.predictList = Response.data.sum_result;
                 console.log(this.predictList);
             })
             .catch(error => {
@@ -75,7 +73,7 @@ export default {
     },//生命周期 - 挂载完成
     computed: {
         prePredictList() {
-            return this.predictList.filter(item => item.pred === 1);
+            return this.predictList.filter(item => item.res === 1);
         },
         // 计算当前页需要展示的数据
         displayedPredList() {

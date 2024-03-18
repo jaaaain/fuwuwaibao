@@ -10,9 +10,9 @@
             </thead>
             <tbody id="neg-predictList">
                 <tr v-for="(item, index) in displayedPredList" :key="index">
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.risk }}</td>
-                    <td>{{ item.risk_level }}</td>
+                      <td>{{index}}</td>
+                      <td>{{ item.res}}</td>
+                      <td>{{ item['个人编码'] }}</td>
                 </tr>
             </tbody>
         </table>
@@ -61,7 +61,7 @@ export default {
     mounted() {
         axios.get('http://127.0.0.1:5000/result')
             .then(Response => {
-                this.predictList = Response.data;
+                this.predictList = Response.data.sum_result;
                 console.log(this.predictList);
             })
             .catch(error => {
@@ -70,7 +70,7 @@ export default {
     },//生命周期 - 挂载完成
     computed: {
         negPredictList() {
-            return this.predictList.filter(item => item.pred === 0);
+            return this.predictList.filter(item => item.res === 0);
         },
         // 计算当前页需要展示的数据
         displayedPredList() {

@@ -132,31 +132,22 @@ def download_file():
             return jsonify({'error': '文件不存在或未设置文件路径'}), 404
     except Exception as e:
         print('处理下载请求时发生异常：', e)
-        return jsonify({'error': '处理下载请求时发生异常'}), 500
+        return jsonify({'error': '处理下载请求时发生异常'}), 504
     
 @app.route('/result', methods=['GET'])
-def handle_result():
-    result=[{'id':1,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':2,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':3,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
-            {'id':4,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':5,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
-            {'id':6,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
-            {'id':7,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':8,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':9,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
-            {'id':10,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':11,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':12,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':13,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
-            {'id':14,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':15,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
-            {'id':16,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
-            {'id':17,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':18,'pred':1,'pos_rate':0.75,'neg_rate':0.25},
-            {'id':19,'pred':0,'pos_rate':0.25,'neg_rate':0.75},
-            {'id':20,'pred':1,'pos_rate':0.75,'neg_rate':0.25}]
-    return jsonify(result)
+def get_result():
+    try:
+        global file_path  # 使用全局变量获取文件地址
+        if file_path is None:
+            return jsonify({'error': '文件地址为空，请先上传文件'}), 401
+        # 使用检测结果的编码方式读取文件
+        df = pd.read_csv(file_path, encoding='utf-8')
+        sum_result=df.to_dict(orient='records')
+        # 读取上传的文件内容并转换为模型输入格式（假设为CSV文件）
+        return jsonify({'sum_result': sum_result})
+    except Exception as e:
+        print('处理获取详细数据请求时发生异常：', e)
+        return jsonify({'error': '处理获取详细数据请求时发生异常'}), 501
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
