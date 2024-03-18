@@ -34,11 +34,17 @@ app = Flask(__name__)
 CORS(app)  # 允许跨域请求
 # 上传文件保存的目录
 UPLOAD_FOLDER = 'uploads'
+SUM_FOLDER='sum'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+if not os.path.exists(SUM_FOLDER):
+    os.makedirs(SUM_FOLDER)#创建放置总体文件的
 # 全局变量保存文件地址
 file_path = None
+# 定义CSV文件名和路径
+sum_filename = 'sum.csv'
+sum_path = os.path.join(SUM_FOLDER, sum_filename)
 @app.route('/data', methods=['POST'])
 def get_data():
     try:
@@ -81,7 +87,9 @@ def handle_data(file):
 
         # 保存带有预测结果的文件
         df.to_csv(file_path, index=False)
-
+        # 将新数据追加到现有CSV文件中，从空行开始存入数据
+        with open(sum_path, 'a', newline='') as f:
+            df.to_csv(f, index=False, header=False)
         return jsonify({'message': 'File uploaded successfully'})
         # else:
         #     return '未找到上传的文件', 400
