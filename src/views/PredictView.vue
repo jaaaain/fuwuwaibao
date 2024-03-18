@@ -38,8 +38,6 @@
 <script>
 import axios from 'axios';
 
-// import axios from "axios";
-//这里导入其他文件
 export default {
     //引入的组件注入到对象中才能使用
     data() {
@@ -69,4 +67,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.loading {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+}
+</style>
