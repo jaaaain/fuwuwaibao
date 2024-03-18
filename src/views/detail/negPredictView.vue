@@ -9,10 +9,10 @@
                 </tr>
             </thead>
             <tbody id="neg-predictList">
-                <tr v-for="(file, index) in displayedPredList" :key="index">
-                    <td>{{ file.id }}</td>
-                    <td>{{ file.risk }}</td>
-                    <td>{{ file.risk_level }}</td>
+                <tr v-for="(item, index) in displayedPredList" :key="index">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.risk }}</td>
+                    <td>{{ item.risk_level }}</td>
                 </tr>
             </tbody>
         </table>
@@ -59,7 +59,7 @@ export default {
         }
     },//方法集合
     mounted() {
-        axios.get('http://127.0.0.1:8081/result')
+        axios.get('http://127.0.0.1:5000/result')
             .then(Response => {
                 this.predictList = Response.data;
                 console.log(this.predictList);

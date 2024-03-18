@@ -44,7 +44,7 @@
 }
 
 ::v-deep .el-tabs__item:hover {
-  color: green;
+  color: rgb(57, 160, 57);
   cursor: pointer;
   opacity: 1;
 }

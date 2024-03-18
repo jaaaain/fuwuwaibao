@@ -86,7 +86,7 @@ export default {
         return; // 如果任何文件类型错误，则停止执行
       }
       // 发送文件上传请求
-      axios.post('http://127.0.0.1:8081/data', formData, {
+      axios.post('http://127.0.0.1:5000/data', formData, {
         headers: {
           'Content-Type': 'multipart/form-data' // 设置正确的头信息
         }

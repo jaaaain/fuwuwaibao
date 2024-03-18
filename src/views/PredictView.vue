@@ -50,7 +50,7 @@ export default {
         downloadFiles() { }
     }, //方法集合
     mounted() { // 显示数据
-        axios.get('http://127.0.0.1:8081/result')
+        axios.get('http://127.0.0.1:5000/result')
             .then(Response => {
                 this.predictList = Response.data;
                 console.log(this.predictList);

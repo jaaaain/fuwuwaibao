@@ -11,12 +11,12 @@
                 </tr>
             </thead>
             <tbody id="pre-predictList">
-                <tr v-for="(file, index) in displayedPredList" :key="index">
-                    <td>{{ file.id }}</td>
-                    <td>{{ file.standard }}</td>
-                    <td>{{ file.feature }}</td>
-                    <td>{{ file.performance }}</td>
-                    <td>{{ file.type }}</td>
+                <tr v-for="(item, index) in displayedPredList" :key="index">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.standard }}</td>
+                    <td>{{ item.feature }}</td>
+                    <td>{{ item.performance }}</td>
+                    <td>{{ item.type }}</td>
                 </tr>
             </tbody>
         </table>
@@ -64,7 +64,7 @@ export default {
         }
     },//方法集合
     mounted() {
-        axios.get('http://127.0.0.1:8081/result')
+        axios.get('http://127.0.0.1:5000/result')
             .then(Response => {
                 this.predictList = Response.data;
                 console.log(this.predictList);
