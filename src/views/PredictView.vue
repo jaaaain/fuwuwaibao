@@ -3,10 +3,11 @@
     <app-header></app-header>
     <div class="main">
       <div class="main-header">
-        <p class="title">LOGO医疗保险欺诈预测系统</p>
+        <p class="tital">LOGO医疗保险欺诈预测系统</p>
         <router-link class="el-icon-close" to="/"></router-link>
       </div>
       <div class="container">
+        <p>上传成功，共 {{ predictList.length }} 条数据</p>
         <table id="predictTable" :data="predictData">
           <thead>
             <tr>
@@ -17,9 +18,9 @@
             </tr>
           </thead>
           <tbody id="predictList">
-            <tr v-for="(item, index) in predictList" :key="index">
-              <td>{{index}}</td>
-              <td>{{ item.res}}</td>
+            <tr v-for="(item, index) in filteredPredictList" :key="index">
+              <td>{{ index }}</td>
+              <td>{{ item.res }}</td>
               <td>{{ item['个人编码'] }}</td>
               <td>{{ item['个人编码'] }}</td>
             </tr>
@@ -48,41 +49,43 @@ export default {
   methods: {
     // 下载结果文件
     downloadFile() {
-          this.downloading = true; // 设置下载状态为true
-          axios({
-            url: 'http://localhost:5000/download-file', // 后端提供的下载文件路由
-            method: 'GET',
-          }).then(response => {
-            const fileContent = atob(response.data.file_content);
-            const fileName = response.data.file_name;
-            const blob = new Blob([fileContent], {type: 'application/octet-stream'});
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', fileName);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            this.downloading = false; // 下载完成后将下载状态设为false
-          }).catch(error => {
-            console.error('Error downloading file:', error);
-            this.downloading = false; // 下载出错时也需要将下载状态设为false
-          });
-    },
-    fetchData() { // 获取预测结果数据
-      axios.post('http://127.0.0.1:5000/predict_view')
-        .then(response => {
-          this.predictList = response.data.first_eight_rows;
-          console.log(this.predictList);
-        })
-        .catch(error => {
-          console.log("Error fetching data:", error);
-        });
+      this.downloading = true; // 设置下载状态为true
+      axios({
+        url: 'http://localhost:5000/download-file', // 后端提供的下载文件路由
+        method: 'GET',
+      }).then(response => {
+        const fileContent = atob(response.data.file_content);
+        const fileName = response.data.file_name;
+        const blob = new Blob([fileContent], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        this.downloading = false; // 下载完成后将下载状态设为false
+      }).catch(error => {
+        console.error('Error downloading file:', error);
+        this.downloading = false; // 下载出错时也需要将下载状态设为false
+      });
     },
   },
   mounted() {
-    this.fetchData(); // 获取数据
+    axios.get('http://127.0.0.1:5000/result')
+      .then(response => {
+        this.predictList = response.data.sum_result;
+        console.log(this.predictList);
+      })
+      .catch(error => {
+        console.log("Error fetching data:", error);
+      });
   },
+  computed: {
+    filteredPredictList() {
+      return this.predictList.slice(0, 6); // 返回前五个元素
+    }
+  }
 };
 </script>
 

@@ -12,7 +12,7 @@
       </div>
       <form action="get/post">
         <ul class="button-box">
-          <li><button class="button">下载模板</button></li>
+          <li><button class="button" @click="DownLoadMode">下载模板</button></li>
           <li><router-link to="./upload" class="button">开始预测</router-link></li>
         </ul>
       </form>
@@ -33,14 +33,27 @@ export default {
   data() {
     return {};
   },
-  methods: {}, //方法集合
-  mounted() {
-    axios
-      .get("https://mock.apifox.cn/m1/3128855-0-default/emp/list")
-      .then((result) => {
-        this.tableData = result.data.data;
+  methods: {
+    DownLoadMode(){
+      axios.get('/download', {
+        responseType: 'blob', // 指定响应数据的类型为 Blob
+      })
+      .then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'example.txt');
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(error => {
+        console.error('下载文件时发生错误:', error);
       });
-  }, //生命周期 - 挂载完成
+
+    }
+  }, //方法集合
+  mounted() {}, //生命周期 - 挂载完成
 };
 </script>
 <style scoped></style>

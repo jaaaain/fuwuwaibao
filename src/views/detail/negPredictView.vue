@@ -25,8 +25,7 @@
 <style scoped>
 /* 设置分页器按钮的颜色 */
 ::v-deep .el-pagination .btn-prev,
-::v-deep .el-pagination .btn-next,
-::v-deep .el-pagination .number:not(.active) {
+::v-deep .el-pagination .btn-next {
     color: white;
     background-color: transparent;
 }
