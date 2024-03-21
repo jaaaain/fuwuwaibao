@@ -11,7 +11,7 @@
             <tbody id="neg-predictList">
                 <tr v-for="(item, index) in displayedPredList" :key="index">
                       <td>{{index}}</td>
-                      <td>{{ item.res}}</td>
+                      <td>{{ item.RES}}</td>
                       <td>{{ item['个人编码'] }}</td>
                 </tr>
             </tbody>
@@ -25,7 +25,8 @@
 <style scoped>
 /* 设置分页器按钮的颜色 */
 ::v-deep .el-pagination .btn-prev,
-::v-deep .el-pagination .btn-next {
+::v-deep .el-pagination .btn-next,
+::v-deep .el-pagination .number:not(.active) {
     color: white;
     background-color: transparent;
 }
@@ -69,7 +70,7 @@ export default {
     },//生命周期 - 挂载完成
     computed: {
         negPredictList() {
-            return this.predictList.filter(item => item.res === 0);
+            return this.predictList.filter(item => item.RES === 0);
         },
         // 计算当前页需要展示的数据
         displayedPredList() {

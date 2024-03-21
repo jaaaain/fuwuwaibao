@@ -12,7 +12,7 @@
             <tbody id="pre-predictList">
                 <tr v-for="(item, index) in displayedPredList" :key="index">
                       <td>{{index}}</td>
-                      <td>{{ item.res}}</td>
+                      <td>{{ item.RES}}</td>
                       <td>{{ item['个人编码'] }}</td>
                       <td>{{ item['个人编码'] }}</td>
                 </tr>
@@ -73,7 +73,7 @@ export default {
     },//生命周期 - 挂载完成
     computed: {
         prePredictList() {
-            return this.predictList.filter(item => item.res === 1);
+            return this.predictList.filter(item => item.RES === 1);
         },
         // 计算当前页需要展示的数据
         displayedPredList() {

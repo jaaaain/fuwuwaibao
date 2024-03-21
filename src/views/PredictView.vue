@@ -20,7 +20,7 @@
           <tbody id="predictList">
             <tr v-for="(item, index) in filteredPredictList" :key="index">
               <td>{{ index }}</td>
-              <td>{{ item.res }}</td>
+              <td>{{ item.RES }}</td>
               <td>{{ item['个人编码'] }}</td>
               <td>{{ item['个人编码'] }}</td>
             </tr>
@@ -72,7 +72,7 @@ export default {
     },
   },
   mounted() {
-    axios.get('http://127.0.0.1:5000/result')
+    axios.get('http://127.0.0.1:5000/result ')
       .then(response => {
         this.predictList = response.data.sum_result;
         console.log(this.predictList);
