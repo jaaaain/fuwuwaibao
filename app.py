@@ -74,7 +74,7 @@ sum_filename = 'sum.csv'
 sum_path = os.path.join(SUM_FOLDER, sum_filename)
 #e 定义模版文件名和路径
 exa_filename = 'example.csv'
-exa_path=os.path.abspath(exa_filename)
+exa_path=os.path.join(SUM_FOLDER, exa_filename)
 @app.route('/data', methods=['POST'])
 def get_data():
     try:
