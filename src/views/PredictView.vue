@@ -14,7 +14,7 @@
               <th>ID</th>
               <th>预测结果</th>
               <th>个人编码</th>
-              <th>负向概率</th>
+              <th>统筹金</th>
             </tr>
           </thead>
           <tbody id="predictList">
@@ -22,7 +22,7 @@
               <td>{{ index }}</td>
               <td>{{ item.RES }}</td>
               <td>{{ item['个人编码'] }}</td>
-              <td>{{ item['个人编码'] }}</td>
+              <td>{{ item['本次审批金额_SUM'] }}</td>
             </tr>
           </tbody>
         </table>

@@ -14,7 +14,7 @@
                       <td>{{index}}</td>
                       <td>{{ item.RES}}</td>
                       <td>{{ item['个人编码'] }}</td>
-                      <td>{{ item['个人编码'] }}</td>
+                      <td>{{ item['本次审批金额_SUM'] }}</td>
                 </tr>
             </tbody>
         </table>

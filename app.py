@@ -72,6 +72,9 @@ file_path = None
 # 定义CSV文件名和路径
 sum_filename = 'sum.csv'
 sum_path = os.path.join(SUM_FOLDER, sum_filename)
+#e 定义模版文件名和路径
+exa_filename = 'example.csv'
+exa_path=os.path.abspath(exa_filename)
 @app.route('/data', methods=['POST'])
 def get_data():
     try:
@@ -150,7 +153,20 @@ def download_file():
     except Exception as e:
         print('处理下载请求时发生异常：', e)
         return jsonify({'error': '处理下载请求时发生异常'}), 504
-
+@app.route('/download', methods=['GET'])
+def download_example():
+    file_path = exa_path
+    file_name = basename(file_path)  # 提取文件名
+    try:
+        if file_path is not None and os.path.exists(file_path):
+            with open(file_path, 'rb') as f:
+                file_content = base64.b64encode(f.read()).decode('utf-8')
+            return jsonify({'file_name': file_name, 'file_content': file_content})
+        else:
+            return jsonify({'error': '文件不存在或未设置文件路径'}), 405
+    except Exception as e:
+        print('处理下载请求时发生异常：', e)
+        return jsonify({'error': '处理下载请求时发生异常'}), 505
 @app.route('/result', methods=['get'])
 def get_result():
     try:
@@ -158,7 +174,7 @@ def get_result():
         if file_path is None:
             return jsonify({'error': '文件地址为空，请先上传文件'}), 401
         # 使用检测结果的编码方式读取文件
-        feature_columns = ['个人编码','RES','risk']
+        feature_columns = ['个人编码','RES','本次审批金额_SUM','risk']
         df = pd.read_csv(file_path, encoding='utf-8',usecols=feature_columns)
         sum_result = df.to_dict(orient='records')
         # 读取上传的文件内容并转换为模型输入格式（假设为CSV文件）

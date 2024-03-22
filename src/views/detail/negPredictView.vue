@@ -11,8 +11,9 @@
             <tbody id="neg-predictList">
                 <tr v-for="(item, index) in displayedPredList" :key="index">
                       <td>{{index}}</td>
-                      <td>{{ item.RES}}</td>
-                      <td>{{ item['个人编码'] }}</td>
+                       <td>{{ item['risk'] }}</td>
+                      <td>{{ getRiskLevel(item['risk']) }}</td>
+
                 </tr>
             </tbody>
         </table>
@@ -56,6 +57,9 @@ export default {
     methods: {
         handleCurrentChange(val) {
             this.currentPage = val;
+        },
+        getRiskLevel(risk) {
+        return risk > 0.5 ? '高风险' : '低风险';
         }
     },//方法集合
     mounted() {
