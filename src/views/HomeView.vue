@@ -40,8 +40,9 @@ export default {
         url: 'http://localhost:5000/download', // 后端提供的下载文件路由
         method: 'GET',
       }).then(response => {
-        const fileContent = atob(response.data.file_content);
-        console.log('解码后的文件内容：', fileContent); // 打印解码后的文件内容
+        const coder = Uint8Array.from(atob(response.data.file_content), c => c.charCodeAt(0));
+        const decoder = new TextDecoder('utf-8');
+        const fileContent = decoder.decode(coder);
         const fileName = response.data.file_name;
         const blob = new Blob([fileContent], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
