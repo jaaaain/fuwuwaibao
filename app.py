@@ -182,6 +182,24 @@ def get_result():
     except Exception as e:
         print('处理获取详细数据请求时发生异常：', e)
         return jsonify({'error': '处理获取详细数据请求时发生异常'}), 501
+@app.route('/sum_show', methods=['get'])
+def show_result():
+    try:
+        file_path = sum_path  # 使用全局变量获取文件地址
+        print(file_path)
+        if file_path is None:
+            return jsonify({'error': '文件地址为空，请先上传文件'}), 401
+        # 使用检测结果的编码方式读取文件
+        print('try')
+        feature_columns = ['个人编码','RES','本次审批金额_SUM','risk']
+        df = pd.read_csv(file_path, encoding='utf-8',usecols=feature_columns)
+        sum_show = df.to_dict(orient='records')
+        print('show')
+        # 读取上传的文件内容并转换为模型输入格式（假设为CSV文件）
+        return jsonify({'sum_show': sum_show})
+    except Exception as e:
+        print('处理获取详细数据请求时发生异常：', e)
+        return jsonify({'error': '处理获取详细数据请求时发生异常'}), 501
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
