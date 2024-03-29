@@ -129,6 +129,16 @@ def handle_data(file):
         df.loc[df['RES'] == 1, 'risk'] = 1
         # 保存带有预测结果的文件
         df.to_csv(file_path, index=False)
+
+        # 读取现有的CSV文件并加载数据到DataFrame中
+        existing_data = pd.read_csv(sum_path)
+
+        # 计算要追加的数据行数
+        new_rows_count = len(df)
+
+        # 将个人编码特征改为自己的行数
+        df['个人编码'] = range(existing_data.shape[0] + 1, existing_data.shape[0] + new_rows_count + 1)
+
         # 将新数据追加到现有CSV文件中，从空行开始存入数据
         with open(sum_path, 'a', newline='') as f:
             df.to_csv(f, index=False, header=False)

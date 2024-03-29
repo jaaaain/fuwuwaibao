@@ -7,44 +7,42 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: () =>
-      import('../views/HomeView.vue'),
+    component: () => import("../views/HomeView.vue"),
   },
   {
     path: "/predict/details",
     name: "detail",
-    component: () =>
-      import('../views/DetailView.vue'),
+    component: () => import("../views/DetailView.vue"),
   },
   {
     path: "/analise",
     name: "analise",
-    component: () =>
-      import('../views/AnaliseView.vue'), // 数据分析
+    component: () => import("../views/AnaliseView.vue"), // 数据分析
   },
   {
     path: "/instruct",
     name: "instruct",
-    component: () =>
-      import('../views/InstView.vue'), // 说明
+    component: () => import("../views/InstView.vue"), // 说明
   },
   {
     path: "/upload",
     name: "upload",
-    component: () =>
-      import('../views/UploadView.vue'),
+    component: () => import("../views/UploadView.vue"),
   },
   {
     path: "/predict",
     name: "predict",
-    component: () =>
-      import('../views/PredictView.vue'),
+    component: () => import("../views/PredictView.vue"),
   },
   {
     path: "/list",
     name: "list",
-    component: () =>
-      import('../views/ListView.vue'),
+    component: () => import("../views/ListView.vue"),
+  },
+  {
+    path: "/item",
+    name: "item",
+    component: () => import("../views/ItemView.vue"),
   },
 ];
 

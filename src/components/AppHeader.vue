@@ -1,12 +1,12 @@
 <template>
   <header>
     <el-header class="header">
-      <router-link to="/" class="logo">logo</router-link>
+      <router-link to="/" class="logo">AABL</router-link>
       <ul class="navigation">
         <li :class="{ 'active': $route.path === '/' }"><router-link to="/">首页</router-link></li>
         <li :class="{ 'active': $route.path === '/predict/details' }"><router-link to="/predict/details">骗保详情</router-link></li>
+        <li :class="{ 'active': $route.path === '/list' }"><router-link to="/list">医保列表</router-link></li>
         <li :class="{ 'active': $route.path === '/analise' }"><router-link to="/analise">数据分析</router-link></li>
-        <li :class="{ 'active': $route.path === '/instruct' }"><router-link to="/instruct">使用说明</router-link></li>
       </ul>
     </el-header>
   </header>

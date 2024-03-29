@@ -17,6 +17,7 @@
     </el-main>
     <el-footer class="footer">
       <p>@2023-2024反诈小队</p>
+      <p><router-link to="/instruct">使用说明</router-link></p>
     </el-footer>
   </el-container>
 </template>
@@ -62,4 +63,11 @@ export default {
   mounted() {}, //生命周期 - 挂载完成
 };
 </script>
-<style scoped></style>
+<style scoped>
+.footer a {
+  color: white;
+  display: block;
+  margin: 15px;
+  font-size: 15px;
+}
+</style>

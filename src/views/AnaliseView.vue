@@ -1,116 +1,90 @@
 <template>
-    <div>
-        <app-header></app-header>
-        <div class="main-list">
-            <div class="list-container">
-                <el-card class="box-card" v-for="(item, index) in displayedPredList" :key="index">
-                    <div slot="header" class="clearfix">
-                        <span>{{ item['个人编码'] }}</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-                        {{ index }}
-                    </div>
+  <el-container>
+    <app-header></app-header>
+    <div class="chart-container" ref="chart"></div>
+  </el-container>
 
-                    <!-- <div v-for="o in 4" :key="o" class="text item">
-                {{ '列表内容 ' + o }}
-            </div> -->
-                </el-card>
-            </div>
-            <div class="select">
-
-                <el-input placeholder="请输入内容" v-model="searchKeyword" class="input-with-select">
-                    <el-button slot="append" icon="el-icon-search"></el-button>
-                </el-input>
-            </div>
-        </div>
-    </div>
 </template>
-
-<style scoped>
-/* .text {
-    font-size: 14px;
-}
-
-.item {
-    margin-bottom: 18px;
-}
-
-.clearfix:before,
-.clearfix:after {
-    display: table;
-    content: "";
-}
-
-.clearfix:after {
-    clear: both
-} */
-.main-list {
-    display: flex;
-    margin: 0 10%;
-}
-.list-container {
-    position: relative;
-    top: 80px;
-}
-
-.box-card {
-    float: left;
-    width: 90%;
-    height: 150px;
-    display: block;
-    margin: 10px auto;
-    background-color: transparent;
-    color: white;
-}
-
-.select {
-    float: right;
-    position: relative;
-    top: 80px;
-    width: 30%;
-    min-width: 180px;
-    height: 150px;
-    display: block;
-    margin: 10px auto;
-}
-</style>
 <script>
+import * as echarts from 'echarts';
 import axios from 'axios';
+
 //这里导入其他文件
 export default {
-    //引入的组件注入到对象中才能使用
-    components: {},
-    props: {},
-    data() {
-        return {
-            predictList: [],
-            searchKeyword: '',
-            pageSize: 6,
-            currentPage: 1,
-            select: ''
-        };
+  //引入的组件注入到对象中才能使用
+  components: {},
+  props: {},
+  data() {
+    return {
+      predictList: [],
+      count0: 0,
+      count1: 0
+    };
+  },
+  methods: {
+    fetchData() {
+      axios.get('http://127.0.0.1:5000/sum_show')
+        .then(Response => {
+          this.predictList = Response.data.sum_show;
+          console.log(this.predictList);
+          this.renderChart();
+        })
+        .catch(error => {
+          console.log("error:", error);
+        });
     },
-    methods: {
-
-    },//方法集合
-    mounted() {
-        axios.get('http://127.0.0.1:5000/sum_show')
-            .then(Response => {
-                this.predictList = Response.data.sum_show;
-                console.log(this.predictList);
-            })
-            .catch(error => {
-                console.log("error:", error);
-            });
-    },//生命周期 - 挂载完成
-    computed: {
-        itemList() {
-            return this.predictList;
+    renderChart() {
+      // 初始化 ECharts 实例
+      const chartInstance = echarts.init(this.$refs.chart);
+      // 计算 0 和 1 的数量
+      this.count0 = this.predictList.filter(item => item.RES === 0).length;
+      this.count1 = this.predictList.filter(item => item.RES === 1).length;
+      console.log(this.count0);
+      console.log(this.count1);
+      // 设置图表配置
+      const options = {
+        title: {
+          text: '骗保占比',
+          x: 'center',
+          textStyle: {
+            fontSize: 18,
+            fontWeight: 'bolder',
+            color: 'white'
+          },
         },
-        // 计算当前页需要展示的数据
-        displayedPredList() {
-            const startIndex = (this.currentPage - 1) * this.pageSize;
-            return this.itemList.slice(startIndex, startIndex + this.pageSize);
-        }
-    }
+        color:['#ff7f50','#87cefa'],
+        series: [
+          {
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: this.count0, name: '非骗保' },
+              { value: this.count1, name: '骗保' }
+            ]
+          },
+          // {
+          //   type: 'line',
+          //   xAxisIndex: 0,
+          //   yAxisIndex: 0,
+          //   data: [1,2,3,4,5],
+          // }
+        ]
+      };
+      // 使用 chartInstance 渲染图表
+      chartInstance.setOption(options); // 设置图表配置
+    },
+  },//方法集合
+  mounted() {
+    this.fetchData();
+  },//生命周期 - 挂载完成
 };
 </script>
+<style scoped>
+.chart-container {
+  position: absolute;
+  top: 80px;
+  color: white;
+  width: 400px;
+  height: 400px;
+}
+</style>

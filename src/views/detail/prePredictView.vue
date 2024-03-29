@@ -52,8 +52,6 @@ export default {
             searchKeyword: '',
             pageSize: 6,
             currentPage: 1,
-            input5: '',
-            select: ''
         };
     },
     methods: {
