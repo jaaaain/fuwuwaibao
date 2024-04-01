@@ -3,12 +3,20 @@
         <app-header></app-header>
         <div class="main-list">
             <div class="list-container">
-                <el-card class="box-card" v-for="(item, index) in displayedItems" :key="index">
-                    <div slot="header" class="clearfix">
-                        <span>{{ item['个人编码'] }}</span>
-                        <router-link to="/item" style="float: right; padding: 3px 0; color: #4caf50;">查看详情</router-link>
+                <el-card class="box-card" v-for="(item, index) in displayedItems" :key="index"
+                    @click.native="toItemDetail(item)">
+                    <img
+                        src="https://gd-hbimg.huaban.com/e40d922474425c9ffae8f36e2f2495078ea6905b13c2-okJiuY_fw1200webp">
+                    <div class="item">
+                        <div class="label">参保个体 {{ item['个人编码'] }}</div>
+                        <span class="data">本次审批金额: {{ item['本次审批金额_SUM'] }} 元</span>
+                        <span class="data">是否挂号: {{ item['是否挂号'] === 1 ? '是' : '否' }}</span>
+                        <br />
+                        <span class="data">是否民政救助: {{ item['BZ_民政救助'] === 1 ? '是' : '否' }}</span>
+                        <span class="data">是否城乡优抚: {{ item['BZ_城乡优抚'] === 1 ? '是' : '否' }}</span>
+                        <br>
+                        <span class="data">月就诊次数: {{ item['月就诊次数_MAX'] }} 次</span>
                     </div>
-                    <div>{{ item }}</div>
                 </el-card>
             </div>
             <div class="select">
@@ -18,14 +26,13 @@
             </div>
 
         </div>
-            <el-pagination small layout="prev, pager, next" :page-size="pageSize" :total=filteredItems.length
-                @current-change="handleCurrentChange">
-            </el-pagination>
+        <el-pagination small layout="prev, pager, next" :page-size="pageSize" :total=filteredItems.length
+            @current-change="handleCurrentChange">
+        </el-pagination>
     </div>
 </template>
 
 <style scoped>
-
 /* 设置分页器按钮的颜色 */
 ::v-deep .el-pagination .btn-prev,
 ::v-deep .el-pagination .btn-next,
@@ -39,28 +46,38 @@
     color: greenyellow;
     background-color: transparent;
 }
-::v-deep .el-pagination{
+
+::v-deep .el-pagination {
     position: fixed;
     bottom: 0;
     right: 80px;
     margin: 10px auto;
 }
+
 .text {
     font-size: 14px;
 }
 
 .item {
-    margin-bottom: 18px;
+    display: block;
 }
 
-.clearfix:before,
-.clearfix:after {
-    display: table;
-    content: "";
+.item .label {
+    font-size: large;
+    padding-bottom: 9px;
 }
 
-.clearfix:after {
-    clear: both
+.item .data {
+    font-size: small;
+    padding: 0 30px 8px 10px;
+    display: inline-block;
+}
+
+.el-card__body img {
+    height: 110px;
+    margin-right: 21px;
+    opacity: 0.4;
+    /* float: left; */
 }
 
 /* ==================== */
@@ -81,8 +98,13 @@
     height: 150px;
     display: block;
     margin: 10px auto;
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.1);
     color: white;
+    border: none;
+}
+
+::v-deep .el-card__body {
+    display: flex;
 }
 
 .select {
@@ -105,7 +127,7 @@ export default {
     props: {},
     data() {
         return {
-            predictList: [],
+            sumList: [],
             searchKeyword: '',
             pageSize: 15,
             currentPage: 1,
@@ -115,32 +137,54 @@ export default {
     methods: {
         handleSearch() {
             this.searchKeyword = this.search;
-        },        
+        },
         handleCurrentChange(val) {
             this.currentPage = val;
-        }
-    },//方法集合
-    mounted() {
-        axios.get('http://127.0.0.1:5000/sum_show')
-            .then(Response => {
-                this.predictList = Response.data.sum_show;
-                console.log(this.predictList);
-            })
-            .catch(error => {
-                console.log("error:", error);
+        },
+        toItemDetail(item) {
+            const personalCode = item['个人编码'];
+            this.createRoutes(item);
+            this.$router.push(`/item/${personalCode}`);
+        },
+        createRoutes(item) {
+            const personalCode = item['个人编码'];
+            const exists = this.$router.options.routes.some(route => {
+                return route.path === `/item/${personalCode}`;
             });
+            if (!exists) {
+                // 创建新的路由
+                this.$router.addRoute({
+                    path: `/item/${personalCode}`,
+                    name: `item-${personalCode}`,
+                    component: () => import('./ItemView.vue'),
+                    props: { itemData: item }
+                });
+            }
+        },
+
+    
+},//方法集合
+mounted() {
+    axios.get('http://127.0.0.1:5000/sum_show')
+        .then(Response => {
+            this.sumList = Response.data.sum_show;
+            console.log(this.sumList);
+        })
+        .catch(error => {
+            console.log("error:", error);
+        });
+},
+computed: {
+    filteredItems() {
+        return this.sumList.filter((item) => {
+            return String(item["个人编码"]).includes(this.searchKeyword.trim());
+        });
     },
-    computed: {
-        filteredItems() {
-            return this.predictList.filter((item) => {
-                return String(item["个人编码"]).includes(this.searchKeyword.trim());
-            });
-        },
-        // 计算当前页需要展示的数据
-        displayedItems() {
-            const startIndex = (this.currentPage - 1) * this.pageSize;
-            return this.filteredItems.slice(startIndex, startIndex + this.pageSize);
-        },
-    }
+    // 计算当前页需要展示的数据
+    displayedItems() {
+        const startIndex = (this.currentPage - 1) * this.pageSize;
+        return this.filteredItems.slice(startIndex, startIndex + this.pageSize);
+    },
+}
 };
 </script>
