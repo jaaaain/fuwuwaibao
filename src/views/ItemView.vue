@@ -19,16 +19,18 @@
 export default {
   //引入的组件注入到对象中才能使用
   components: {},
-  props: {
-    itemData: Object
-  },
   data() {
     return {
+      itemData:{}
     };
   },
   methods: {
   },//方法集合
   mounted() {
+    const personalCode = this.$route.params.personalCode;
+    // 根据个人编码从 sessionStorage 中获取对应的数据
+    const sumList = JSON.parse(sessionStorage.getItem('sumList')) || [];
+    this.itemData = sumList.find(item => item['个人编码'] == personalCode) || {};
   },//生命周期 - 挂载完成
 };
 </script>

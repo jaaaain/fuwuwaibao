@@ -142,49 +142,31 @@ export default {
             this.currentPage = val;
         },
         toItemDetail(item) {
-            const personalCode = item['个人编码'];
-            this.createRoutes(item);
-            this.$router.push(`/item/${personalCode}`);
+            this.$router.push(`list/item/${item['个人编码']}`);
         },
-        createRoutes(item) {
-            const personalCode = item['个人编码'];
-            const exists = this.$router.options.routes.some(route => {
-                return route.path === `/item/${personalCode}`;
+    },//方法集合
+    mounted() {
+        axios.get('http://127.0.0.1:5000/sum_show')
+            .then(Response => {
+                this.sumList = Response.data.sum_show;
+                console.log(this.sumList);
+                sessionStorage.setItem('sumList', JSON.stringify(this.sumList));
+            })
+            .catch(error => {
+                console.log("error:", error);
             });
-            if (!exists) {
-                // 创建新的路由
-                this.$router.addRoute({
-                    path: `/item/${personalCode}`,
-                    name: `item-${personalCode}`,
-                    component: () => import('./ItemView.vue'),
-                    props: { itemData: item }
-                });
-            }
+    },
+    computed: {
+        filteredItems() {
+            return this.sumList.filter((item) => {
+                return String(item["个人编码"]).includes(this.searchKeyword.trim());
+            });
         },
-
-    
-},//方法集合
-mounted() {
-    axios.get('http://127.0.0.1:5000/sum_show')
-        .then(Response => {
-            this.sumList = Response.data.sum_show;
-            console.log(this.sumList);
-        })
-        .catch(error => {
-            console.log("error:", error);
-        });
-},
-computed: {
-    filteredItems() {
-        return this.sumList.filter((item) => {
-            return String(item["个人编码"]).includes(this.searchKeyword.trim());
-        });
-    },
-    // 计算当前页需要展示的数据
-    displayedItems() {
-        const startIndex = (this.currentPage - 1) * this.pageSize;
-        return this.filteredItems.slice(startIndex, startIndex + this.pageSize);
-    },
-}
+        // 计算当前页需要展示的数据
+        displayedItems() {
+            const startIndex = (this.currentPage - 1) * this.pageSize;
+            return this.filteredItems.slice(startIndex, startIndex + this.pageSize);
+        },
+    }
 };
 </script>

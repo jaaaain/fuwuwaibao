@@ -39,6 +39,11 @@ const routes = [
     name: "list",
     component: () => import("../views/ListView.vue"),
   },
+  {
+    path: "/list/item/:personalCode",
+    name: "item",
+    component: () => import("../views/ItemView.vue"),
+  }
 ];
 
 const router = new VueRouter({
