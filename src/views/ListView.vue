@@ -150,7 +150,7 @@ export default {
             .then(Response => {
                 this.sumList = Response.data.sum_show;
                 console.log(this.sumList);
-                sessionStorage.setItem('sumList', JSON.stringify(this.sumList));
+                localStorage.setItem('sumList', JSON.stringify(this.sumList));
             })
             .catch(error => {
                 console.log("error:", error);
