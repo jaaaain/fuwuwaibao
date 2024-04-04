@@ -177,7 +177,8 @@ export default {
             fontSize: 20, // 批注文字大小
             fill: 'white' // 批注文字颜色
           }
-        }, {
+        },
+          {
           type: 'text',
           left: '8%',
           top: '85%',
@@ -336,7 +337,8 @@ export default {
             }
           },
           data: [{
-            value: 0.55 // 数值
+            value:0.5
+            //value: this.itemData['risk'] // 数值调用
           }]
         },
         {

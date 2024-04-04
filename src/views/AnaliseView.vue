@@ -11,6 +11,7 @@
 </template>
 <script>
 import * as echarts from 'echarts';
+import axios from 'axios';
 //这里导入其他文件
 export default {
   //引入的组件注入到对象中才能使用
@@ -25,8 +26,16 @@ export default {
   },
   methods: {
     fetchData() {
-      this.sumList = JSON.parse(sessionStorage.getItem('sumList')) || [];
-      this.renderChart();
+      axios.get('http://127.0.0.1:5000/sum_show')
+            .then(Response => {
+                this.sumList = Response.data.sum_show;
+                console.log(this.sumList);
+                this.renderChart();
+            })
+            .catch(error => {
+                console.log("error:", error);
+            });
+
     },
     renderChart() {
       this.handleChart1();
