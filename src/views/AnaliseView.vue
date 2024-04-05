@@ -60,6 +60,10 @@ export default {
             color: 'white'
           },
         },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{b}: {c} ({d}%)'  // 提示框内容格式
+        },
         color: ['#ff7f50', '#87cefa'],
         series: [
           {
@@ -77,9 +81,15 @@ export default {
     },
     handleChart2() {
       var myChart = echarts.init(document.getElementById("Chart2"));
+      // 定义一个对象，用于存储各种大小数据的数量统计
+      // 统计审批金额在1000到2000之间的数据数量
+      this.count00000to10000 = this.sumList.filter(item => item['本次审批金额_SUM'] >= 0 && item['本次审批金额_SUM'] < 10000).length;
+      this.count10000to20000 = this.sumList.filter(item => item['本次审批金额_SUM'] >= 10000 && item['本次审批金额_SUM'] < 20000).length;
+      this.count20000to30000 = this.sumList.filter(item => item['本次审批金额_SUM'] >= 20000 && item['本次审批金额_SUM'] < 30000).length;
+      this.count30000to = this.sumList.filter(item => item['本次审批金额_SUM'] >= 30000).length;
       var option = {
         title: {
-          text: '标题',
+          text: '审批金额分析',
           textStyle: {
             fontSize: 18,
             color: 'white'
@@ -94,7 +104,7 @@ export default {
           },
           data: [
             {
-              name: '费用',
+              name: '数量',
               icon: 'circle',  //图例样式
             }
           ],
@@ -110,19 +120,21 @@ export default {
             color: "green",
           },
         },
-        xAxis: {  //x轴
-          offset: 10,  //偏移
-          name: '类型',
-          nameGap: 15,  //名称与轴线的距离
-          data: ['药品费',
-            '检查费',
-            '治疗费',
-            '床位费']
+        xAxis: {
+          offset: 10,
+          name: '数值',
+          nameGap: 15,
+          type: 'category',  // 指定 x 轴的类型为类目型
+          axisLabel: {
+            interval: 0,  // 强制显示所有标签
+            rotate: 30     // 旋转角度
+          },
+          data: ['0~10000', '10000~20000', '20000~30000', '30000~']
         },
         yAxis: {  //y轴
           type: 'value',
           offset: 1,  //偏移
-          name: '费用',
+          name: '数量',
           nameGap: 15,  //名称与轴线的距离
           axisLine: {
             show: true,
@@ -149,7 +161,7 @@ export default {
           },
           barWidth: '10',  //宽度
           barCategoryGap: '20%',  //间距
-          data: [3020, 4800, 3600, 6050, 4320, 6200, 5050, 7200, 4521, 6700, 8000, 5020]
+          data: [this.count00000to10000,this.count10000to20000,this.count20000to30000,this.count30000to]
         }]
       };
       myChart.setOption(option);

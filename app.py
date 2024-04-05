@@ -201,8 +201,9 @@ def show_result():
             return jsonify({'error': '文件地址为空，请先上传文件'}), 401
         # 使用检测结果的编码方式读取文件
         print('try')
-        feature_columns = ['个人编码','RES','本次审批金额_SUM','risk','是否挂号','BZ_民政救助','BZ_城乡优抚','月就诊次数_MAX']
+        feature_columns = ['个人编码','RES','本次审批金额_SUM','risk','是否挂号','BZ_民政救助','BZ_城乡优抚','月就诊次数_MAX','月就诊天数_MAX','药品在总金额中的占比']
         df = pd.read_csv(file_path, encoding='utf-8',usecols=feature_columns)
+        df = df.round(4)
         sum_show = df.to_dict(orient='records')
         print('show')
         # 读取上传的文件内容并转换为模型输入格式（假设为CSV文件）

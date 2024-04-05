@@ -148,6 +148,9 @@ export default {
     mounted() {
         axios.get('http://127.0.0.1:5000/sum_show')
             .then(Response => {
+                if (localStorage.getItem('sumList')) {
+                    localStorage.removeItem('sumList');
+                }
                 this.sumList = Response.data.sum_show;
                 console.log(this.sumList);
                 localStorage.setItem('sumList', JSON.stringify(this.sumList));
@@ -161,6 +164,7 @@ export default {
             return this.sumList.filter((item) => {
                 return String(item["个人编码"]).includes(this.searchKeyword.trim());
             });
+
         },
         // 计算当前页需要展示的数据
         displayedItems() {

@@ -139,7 +139,9 @@ export default {
       this.personalCode = this.$route.params.personalCode;
       // 根据个人编码从 sessionStorage 中获取对应的数据
       const sumList = JSON.parse(localStorage.getItem('sumList')) || [];
+      console.log(sumList)
       this.itemData = sumList.find(item => item['个人编码'] == this.personalCode) || {};
+      console.log(this.itemData)
       this.renderChart();
     },
     renderChart() {
@@ -287,11 +289,11 @@ export default {
             fontSize: 15,
             offsetCenter: [0, '10%'],
             formatter: function (value) {
-              return value * 100 + '%';
+              return (value * 100).toFixed(1) + '%';
             }
           },
           data: [{
-            value: 0.25 // 数值
+            value: this.itemData['药品在总金额中的占比'] // 数值
           }]
         },
         {
@@ -337,8 +339,7 @@ export default {
             }
           },
           data: [{
-            value:0.5
-            //value: this.itemData['risk'] // 数值调用
+            value: this.itemData['药品在总金额中的占比']// 数值调用
           }]
         },
         {
@@ -384,7 +385,7 @@ export default {
             }
           },
           data: [{
-            value: 0.55 // 数值
+            value: this.itemData['药品在总金额中的占比'] // 数值
           }]
         },
         {
@@ -430,7 +431,7 @@ export default {
             }
           },
           data: [{
-            value: 0.55 // 数值
+            value: this.itemData['药品在总金额中的占比'] // 数值
           }]
         },
         {
@@ -476,7 +477,7 @@ export default {
             }
           },
           data: [{
-            value: 0.55 // 数值
+            value: this.itemData['药品在总金额中的占比']// 数值
           }]
         },
         {
@@ -522,7 +523,8 @@ export default {
             }
           },
           data: [{
-            value: 0.55 // 数值
+            value: this.itemData['药品在总金额中的占比']// 数值
+
           }]
         }]
       }
