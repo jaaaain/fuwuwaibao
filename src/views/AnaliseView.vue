@@ -2,9 +2,11 @@
   <el-container>
     <app-header></app-header>
     <div class="chart-container">
-      <div class="chart" id="Chart1"></div>
-      <div class="chart" id="Chart2"></div>
-      <div class="chart" id="Chart3"></div>
+      <div class="chart" id="Chart1" style="position: absolute; top: 20px; left: 20px;"></div>
+      <div class="chart" id="Chart2" style="position: absolute; top: 20px; right: 20px;"></div>
+      <div class="chart" id="Chart3" style="position: absolute; top: 500px; left: 20px;"></div>
+      <div class="chart" id="Chart5" style="position: absolute; top: 500px; right: 20px;"></div>
+      <div class="chart" id="Chart4" style="position: absolute; top: 250px; left: 50%; transform: translate(-50%, -50%);"></div>
     </div>
   </el-container>
 
@@ -41,6 +43,8 @@ export default {
       this.handleChart1();
       this.handleChart2();
       this.handleChart3();
+      this.handleChart4();
+      this.handleChart5();
     },
     handleChart1() {
       // 初始化 ECharts 实例
@@ -167,7 +171,204 @@ export default {
       myChart.setOption(option);
     },
     handleChart3() {
+      // 初始化 ECharts 实例
+      const chartInstance = echarts.init(document.getElementById("Chart3"));
+      // 计算 低中高风险 的数量
+      this.risk1 = this.sumList.filter(item => item.risk >= 0  && item.risk<=0.3).length;
+      this.risk2 = this.sumList.filter(item => item.risk >0.3  && item.risk<=0.6).length;
+      this.risk3 = this.sumList.filter(item => item.risk >0.6  && item.risk<1).length;
+      console.log(this.risk1);
+      console.log(this.risk2);
+      // 设置图表配置
+      const options = {
+        title: {
+          text: '医保欺诈风险占比',
+          x: 'center',
+          textStyle: {
+            fontSize: 18,
+            color: 'white'
+          },
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{b}: {c} ({d}%)'  // 提示框内容格式
+        },
+        color: ['#ff7f50', '#87cefa', 'purple'],
+        series: [
+          {
+            type: 'pie',
+            radius: '50%',
+            data: [
+              { value: this.risk1, name: '低风险' },
+              { value: this.risk2, name: '中风险' },
+              { value: this.risk3, name: '高风险' }
+            ]
+          }
+        ]
+      };
+      // 使用 chartInstance 渲染图表
+      chartInstance.setOption(options); // 设置图表配置
 
+    },
+    handleChart4() {
+      // 初始化 ECharts 实例
+      console.log('读取成功');
+      const chartInstance = echarts.init(document.getElementById("Chart4"));
+      // 计算欺诈成功的数量
+      this.FraudData = this.sumList.filter(item => item.RES === 1);
+      console.log(this.FraudData);
+      this.count00000to5000 = this.FraudData.filter(item => item['本次审批金额_SUM'] >= 0 && item['本次审批金额_SUM'] < 5000).length;
+      this.count5000to10000 = this.FraudData.filter(item => item['本次审批金额_SUM'] >= 5000 && item['本次审批金额_SUM'] < 15000).length;
+      this.count10000to15000 = this.FraudData.filter(item => item['本次审批金额_SUM'] >= 10000 && item['本次审批金额_SUM'] < 15000).length;
+      this.count15000to20000 = this.FraudData.filter(item => item['本次审批金额_SUM'] >= 15000 && item['本次审批金额_SUM'] < 20000).length;
+      this.count20000to = this.FraudData.filter(item => item['本次审批金额_SUM'] >= 20000).length;
+      // 在格式化函数外部定义一个变量来存储 this.FraudData
+      let fraudData = this.FraudData;
+      // 设置图表配置
+      const options = {
+        title: {
+          text: '欺诈金额展示', // 根据需要更改标题
+          textStyle: {
+            fontSize: 18,
+            color: 'white'
+          }
+        },
+        tooltip: {
+          trigger: 'item', // 设置触发方式为 item
+          formatter: function (params) {
+            let totalAmount = 0; // 初始化总金额为 0
+            // 在格式化函数内部引用 fraudData 变量
+            fraudData.forEach(item => {
+              totalAmount += item['本次审批金额_SUM']; // 累加审批金额
+            });
+            totalAmount = totalAmount.toFixed(0);
+            let result = params.name; // 显示维度名称
+            for (let i = 0; i < params.value.length; i++) {
+              result += '维度' + (i + 1) + '数量：' + params.value[i] + '<br/>'; // 显示当前维度的数量
+            }
+            result += '欺诈金额总和：' + totalAmount; // 显示欺诈金额的数量总和
+            return result;
+          }
+        },
+        radar: {
+          indicator: [
+            { name: '0000~' },
+            { name: '5000~' },
+            { name: '10000~' },
+            { name: '15000~' },
+            { name: '20000~' }
+          ],
+          center: ['50%', '50%'],
+          radius: '60%',
+          name: {
+            textStyle: {
+              color: 'white'
+            }
+          }
+        },
+        series: [{
+          type: 'radar',
+          data: [
+          { value: [this.count00000to5000, this.count5000to10000 , this.count10000to15000, this.count15000to20000, this.count20000to] } // 这里是一个对象，包含了五个维度的数据
+        ]
+        }]
+      };
+      // 使用 chartInstance 渲染图表
+      chartInstance.setOption(options); // 设置图表配置
+
+    },
+      handleChart5() {
+      // 初始化 ECharts 实例
+      console.log('读取成功');
+      const chartInstance = echarts.init(document.getElementById("Chart5"));
+      this.amountmax = this.sumList.reduce((max, item) => {
+        // 检查当前项目的审批金额是否大于已知的最大值
+        if (item['本次审批金额_SUM'] > max) {
+          return item['本次审批金额_SUM']; // 如果是，则返回当前项目的审批金额作为新的最大值
+        } else {
+          return max; // 如果不是，则保持已知的最大值不变
+        }
+      }, 0); // 初始值设为 0
+      this.daymax = this.sumList.reduce((max, item) => {
+        // 检查当前项目的审批金额是否大于已知的最大值
+        if (item['就诊次数_SUM'] > max) {
+          return item['就诊次数_SUM']; // 如果是，则返回当前项目的审批金额作为新的最大值
+        } else {
+          return max; // 如果不是，则保持已知的最大值不变
+        }
+      }, 0); // 初始值设为 0
+      // 计算欺诈成功的数据
+      this.FraudData = this.sumList.filter(item => item.RES === 1);
+      console.log(this.FraudData);
+      this.fraudmax = this.FraudData.reduce((max, item) => {
+        // 检查当前项目的审批金额是否大于已知的最大值
+        if (item['本次审批金额_SUM'] > max) {
+          return item['本次审批金额_SUM']; // 如果是，则返回当前项目的审批金额作为新的最大值
+        } else {
+          return max; // 如果不是，则保持已知的最大值不变
+        }
+      }, 0); // 初始值设为 0
+      // 在格式化函数外部定义一个变量来存储 this.FraudData
+      // 设置图表配置
+      const options = {
+        title: {
+          text: '最大值展示', // 根据需要更改标题
+          textStyle: {
+            fontSize: 18,
+            color: 'white'
+          }
+        },
+        tooltip: {
+          trigger: 'axis', // 设置触发方式为 axis
+          axisPointer: {
+            type: 'shadow' // 设置坐标轴指示器类型为阴影
+          },
+          formatter: function (params) {
+            let result = params[0].name + '<br/>'; // 显示维度名称
+            result += params[0].value.toFixed(2); // 显示欺诈金额的数量
+            return result;
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        yAxis: {
+          type: 'category',
+          data: ['最大统筹金', '最大就诊天数', '最大欺诈金额'], // 设置 y 轴数据
+          axisLine: {
+            lineStyle: {
+              color: 'white' // 设置 y 轴颜色为白色
+            }
+          },
+          axisLabel: {
+            color: 'white' // 设置 y 轴标签颜色为白色
+          }
+        },
+        xAxis: {
+          type: 'value', // 设置 x 轴类型为数值型
+          axisLine: {
+            show: false // 隐藏 x 轴线
+          },
+          axisLabel: {
+            show: false // 隐藏 x 轴标签
+          },
+          splitLine: {
+            show: false // 隐藏 x 轴分隔线
+          }
+        },
+        series: [{
+          type: 'bar',
+          data: [this.amountmax, this.daymax, this.fraudmax], // 设置柱状图数据
+          itemStyle: {
+            color: '#2ecc71' // 设置柱状图颜色为绿色
+          }
+        }]
+      };
+      // 使用 chartInstance 渲染图表
+      chartInstance.setOption(options); // 设置图表配置
     },
   },//方法集合
   mounted() {
