@@ -16,8 +16,8 @@
       </div>
     </el-main>
     <el-footer class="footer">
-      <p>@2023-2024反诈小队</p>
       <p><router-link to="/instruct">使用说明</router-link></p>
+      <p>@2023-2024反诈小队</p>
     </el-footer>
   </el-container>
 </template>

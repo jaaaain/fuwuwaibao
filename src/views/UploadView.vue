@@ -71,7 +71,10 @@ export default {
         alert("文件为空，请选择要上传的文件");
         return; // 停止执行
       }
-
+      if (this.fileList.length > 1) {
+        alert("文件复数，请逐个上传文件");
+        return; // 停止执行
+      }
       let allFilesAreCsv = true;
       const formData = new FormData(); // 创建 FormData 对象
       this.fileList.forEach((fileInfo) => {
