@@ -183,7 +183,7 @@ def get_result():
         global file_path  # 使用全局变量获取文件地址
         if file_path is None:
             return jsonify({'error': '文件地址为空，请先上传文件'}), 401
-        feature_columns = ['个人编码','RES','本次审批金额_SUM','risk']
+        feature_columns = ['个人编码','RES','本次审批金额_SUM','risk','就诊次数_SUM','个人账户金额_SUM','统筹支付金额_SUM']
         df = pd.read_csv(file_path, encoding='utf-8',usecols=feature_columns)
         sum_result = df.to_dict(orient='records')
         # 读取上传的文件内容并转换为模型输入格式（假设为CSV文件）
@@ -199,7 +199,7 @@ def show_result():
         if file_path is None:
             return jsonify({'error': '文件地址为空，请先上传文件'}), 401
         print('try')
-        feature_columns = ['个人编码','RES','本次审批金额_SUM','risk','是否挂号','BZ_民政救助','BZ_城乡优抚','月就诊次数_MAX','月就诊天数_MAX',
+        feature_columns = ['个人编码','RES','本次审批金额_SUM','risk','是否挂号','BZ_民政救助','BZ_城乡优抚','月就诊次数_MAX','月就诊天数_MAX','月就诊天数_SUM',
                            '药品在总金额中的占比','个人支付的药品占比','检查总费用在总金额占比','个人支付检查费用占比','治疗费用在总金额占比','个人支付治疗费用占比',
                            '月就诊天数_MAX','月就诊天数_AVG','月就诊医院数_MAX','月就诊医院数_AVG','月就诊次数_MAX','月就诊次数_AVG','就诊次数_SUM',
                            '药品费发生金额_SUM','药品费自费金额_SUM','药品费申报金额_SUM',

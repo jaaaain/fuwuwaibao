@@ -10,7 +10,7 @@
             </thead>
             <tbody id="neg-predictList">
                 <tr v-for="(item, index) in displayedPredList" :key="index">
-                    <td>{{ item['个人编码'] }}</td>
+                    <td>{{ index }}</td>
                     <td>{{ riskPercentage(item['risk']) }}</td>
                     <td>{{ getRiskLevel(item['risk']) }}</td>
                 </tr>

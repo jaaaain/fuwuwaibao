@@ -4,17 +4,17 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>判别标准</th>
-                    <th>特征描述</th>
-                    <th>表现</th>
+                    <th>个人支付</th>
+                    <th>欺诈金额</th>
+                    <th>欺诈程度</th>
                 </tr>
             </thead>
             <tbody id="pre-predictList">
                 <tr v-for="(item, index) in displayedPredList" :key="index">
-                    <td>{{ item['个人编码'] }}</td>
-                    <td>{{ item.RES }}</td>
-                    <td>{{ item['个人编码'] }}</td>
-                    <td>{{ item['本次审批金额_SUM'] }}</td>
+                    <td>{{index}}</td>
+                    <td>{{ item['个人账户金额_SUM'] }}</td>
+                    <td>{{ item['统筹支付金额_SUM'] }}</td>
+                    <td>{{ getLevel(item['统筹支付金额_SUM']) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -56,6 +56,15 @@ export default {
     methods: {
         handleCurrentChange(val) {
             this.currentPage = val;
+        },
+        getLevel(acount) {
+            if (acount >= 0 && acount <= 5000) {
+                return '低金额';
+            } else if (acount > 5000 && acount < 10000) {
+                return '中风险';
+            } else {
+                return '高风险';
+            }
         }
     },//方法集合
     mounted() {

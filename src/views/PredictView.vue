@@ -13,7 +13,7 @@
             <tr>
               <th>ID</th>
               <th>预测结果</th>
-              <th>个人编码</th>
+              <th>就诊次数</th>
               <th>统筹金</th>
             </tr>
           </thead>
@@ -21,7 +21,7 @@
             <tr v-for="(item, index) in filteredPredictList" :key="index">
               <td>{{ index }}</td>
               <td>{{ item.RES }}</td>
-              <td>{{ item['个人编码'] }}</td>
+              <td>{{ item['就诊次数_SUM']}}</td>
               <td>{{ item['本次审批金额_SUM'] }}</td>
             </tr>
           </tbody>
