@@ -183,7 +183,6 @@ def get_result():
         global file_path  # 使用全局变量获取文件地址
         if file_path is None:
             return jsonify({'error': '文件地址为空，请先上传文件'}), 401
-        # 使用检测结果的编码方式读取文件
         feature_columns = ['个人编码','RES','本次审批金额_SUM','risk']
         df = pd.read_csv(file_path, encoding='utf-8',usecols=feature_columns)
         sum_result = df.to_dict(orient='records')
@@ -199,7 +198,6 @@ def show_result():
         print(file_path)
         if file_path is None:
             return jsonify({'error': '文件地址为空，请先上传文件'}), 401
-        # 使用检测结果的编码方式读取文件
         print('try')
         feature_columns = ['个人编码','RES','本次审批金额_SUM','risk','是否挂号','BZ_民政救助','BZ_城乡优抚','月就诊次数_MAX','月就诊天数_MAX','药品在总金额中的占比','就诊次数_SUM']
         df = pd.read_csv(file_path, encoding='utf-8',usecols=feature_columns)

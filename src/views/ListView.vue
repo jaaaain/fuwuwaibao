@@ -10,7 +10,7 @@
                     <div class="item">
                         <div class="label">参保个体 {{ item['个人编码'] }}</div>
                         <span class="data">本次审批金额: {{ item['本次审批金额_SUM'] }} 元</span>
-                        <span class="data">是否挂号: {{ item['是否挂号'] === 1 ? '是' : '否' }}</span>
+                        <span class="data">是否欺诈: {{ item['RES'] === 1 ? '是' : '否' }}</span>
                         <br />
                         <span class="data">是否民政救助: {{ item['BZ_民政救助'] === 1 ? '是' : '否' }}</span>
                         <span class="data">是否城乡优抚: {{ item['BZ_城乡优抚'] === 1 ? '是' : '否' }}</span>
