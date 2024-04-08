@@ -10,14 +10,13 @@
             </thead>
             <tbody id="neg-predictList">
                 <tr v-for="(item, index) in displayedPredList" :key="index">
-                      <td>{{index}}</td>
-                      <td>{{ riskPercentage(item['risk']) }}</td>
-                      <td>{{ getRiskLevel(item['risk']) }}</td>
-
+                    <td>{{ item['个人编码'] }}</td>
+                    <td>{{ riskPercentage(item['risk']) }}</td>
+                    <td>{{ getRiskLevel(item['risk']) }}</td>
                 </tr>
             </tbody>
         </table>
-        <el-pagination layout="prev, pager, next" :page-size="pageSize" :total=negPredictList.length
+        <el-pagination layout="prev, pager, next" :page-size="pageSize" :total=filteredItems.length
             @current-change="handleCurrentChange">
         </el-pagination>
     </div>
@@ -45,11 +44,10 @@ export default {
     //引入的组件注入到对象中才能使用
     name: 'negPredictView',
     components: {},
-    props: {},
+    props: ["searchKeyword"],
     data() {
         return {
             predictList: [],
-            searchKeyword: '',
             pageSize: 6,
             currentPage: 1
         };
@@ -59,19 +57,19 @@ export default {
             this.currentPage = val;
         },
         riskPercentage(value) {
-          if (typeof value !== 'number') {
-            return '';
-          }
-          return (value * 100).toFixed(2) + '%';
-          },
+            if (typeof value !== 'number') {
+                return '';
+            }
+            return (value * 100).toFixed(2) + '%';
+        },
         getRiskLevel(risk) {
-          if (risk >= 0 && risk <= 0.3) {
-            return '低风险';
-          } else if (risk > 0.3 && risk < 0.6) {
-            return '中风险';
-          } else {
-            return '高风险';
-          }
+            if (risk >= 0 && risk <= 0.3) {
+                return '低风险';
+            } else if (risk > 0.3 && risk < 0.6) {
+                return '中风险';
+            } else {
+                return '高风险';
+            }
         }
     },//方法集合
     mounted() {
@@ -91,8 +89,14 @@ export default {
         // 计算当前页需要展示的数据
         displayedPredList() {
             const startIndex = (this.currentPage - 1) * this.pageSize;
-            return this.negPredictList.slice(startIndex, startIndex + this.pageSize);
-        }
+            return this.filteredItems.slice(startIndex, startIndex + this.pageSize);
+        },
+        filteredItems() {
+            // 根据参数进行过滤
+            return this.negPredictList.filter((item) => {
+                return String(item["个人编码"]).includes(this.searchKeyword.trim());
+            });
+        },
     }
 };
 </script>

@@ -11,14 +11,14 @@
             </thead>
             <tbody id="pre-predictList">
                 <tr v-for="(item, index) in displayedPredList" :key="index">
-                      <td>{{index}}</td>
-                      <td>{{ item.RES}}</td>
-                      <td>{{ item['个人编码'] }}</td>
-                      <td>{{ item['本次审批金额_SUM'] }}</td>
+                    <td>{{ item['个人编码'] }}</td>
+                    <td>{{ item.RES }}</td>
+                    <td>{{ item['个人编码'] }}</td>
+                    <td>{{ item['本次审批金额_SUM'] }}</td>
                 </tr>
             </tbody>
         </table>
-        <el-pagination layout="prev, pager, next" :page-size="pageSize" :total=prePredictList.length
+        <el-pagination layout="prev, pager, next" :page-size="pageSize" :total=filteredItems.length
             @current-change="handleCurrentChange">
         </el-pagination>
     </div>
@@ -45,13 +45,12 @@ export default {
     //引入的组件注入到对象中才能使用
     name: 'prePredictView',
     components: {},
-    props: {},
+    props: ["searchKeyword"],
     data() {
         return {
             predictList: [],
-            searchKeyword: '',
             pageSize: 6,
-            currentPage: 1,
+            currentPage: 1
         };
     },
     methods: {
@@ -76,9 +75,13 @@ export default {
         // 计算当前页需要展示的数据
         displayedPredList() {
             const startIndex = (this.currentPage - 1) * this.pageSize;
-            return this.prePredictList.slice(startIndex, startIndex + this.pageSize);
-        }
+            return this.filteredItems.slice(startIndex, startIndex + this.pageSize);
+        },
+        filteredItems() {
+            return this.prePredictList.filter((item) => {
+                return String(item["个人编码"]).includes(this.searchKeyword.trim());
+            });
+        },
     }
 };
 </script>
-<style scoped></style>

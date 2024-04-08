@@ -23,14 +23,14 @@
           </div>
         </div>
         <div class="item-data">
-          <span class="data">月就诊天数AVG</span>
-          <span class="data">月就诊天数SUM</span>
+          <span class="data">月就诊天数MAX: {{ itemData['月就诊天数_MAX'] }}</span>
+          <span class="data">月就诊天数AVG: {{ itemData['月就诊天数_AVG'] }}</span>
           <br><br>
-          <span class="data">月就诊医院数AVG</span>
-          <span class="data">月就诊医院输MAX</span>
+          <span class="data">月就诊医院数MAX: {{ itemData['月就诊医院数_MAX'] }}</span>
+          <span class="data">月就诊医院数AVG: {{ itemData['月就诊医院数_AVG'] }}</span>
           <br><br>
-          <span class="data">医院就诊天数AVG</span>
-          <span class="data">医院就诊天数MAX</span>
+          <span class="data">月就诊次数MAX: {{ itemData['月就诊次数_MAX'] }}</span>
+          <span class="data">月就诊次数AVG: {{ itemData['月就诊次数_AVG'] }}</span>
         </div>
       </div>
       <div class="data-container">
@@ -339,7 +339,7 @@ export default {
             }
           },
           data: [{
-            value: this.itemData['药品在总金额中的占比']// 数值调用
+            value: this.itemData['个人支付的药品占比']// 数值调用
           }]
         },
         {
@@ -385,7 +385,7 @@ export default {
             }
           },
           data: [{
-            value: this.itemData['药品在总金额中的占比'] // 数值
+            value: this.itemData['检查总费用在总金额占比'] // 数值
           }]
         },
         {
@@ -431,7 +431,7 @@ export default {
             }
           },
           data: [{
-            value: this.itemData['药品在总金额中的占比'] // 数值
+            value: this.itemData['个人支付检查费用占比'] // 数值
           }]
         },
         {
@@ -477,7 +477,7 @@ export default {
             }
           },
           data: [{
-            value: this.itemData['药品在总金额中的占比']// 数值
+            value: this.itemData['治疗费用在总金额占比']// 数值
           }]
         },
         {
@@ -523,7 +523,7 @@ export default {
             }
           },
           data: [{
-            value: this.itemData['药品在总金额中的占比']// 数值
+            value: this.itemData['个人支付治疗费用占比']// 数值
 
           }]
         }]
@@ -594,7 +594,7 @@ export default {
           },
           barWidth: '20',  //宽度
           barCategoryGap: '20%',  //间距
-          data: [3020, 4800, 3600, 6050],
+          data: [this.itemData['药品费发生金额_SUM'], this.itemData['检查费发生金额_SUM'], this.itemData['治疗费发生金额_SUM'], this.itemData['床位费发生金额_SUM']],
           itemStyle: {
             color: 'green',
             barBorderRadius: [5, 5, 0, 0],
@@ -609,7 +609,7 @@ export default {
           },
           barWidth: '20',  //宽度
           barCategoryGap: '20%',  //间距
-          data: [4320, 6200, 5050, 7200],
+          data: [this.itemData['药品费自费金额_SUM'], this.itemData['检查费自费金额_SUM'], this.itemData['治疗费自费金额_SUM'], this.itemData['床位费自费金额_SUM']],
           itemStyle: {
             color: '#5abd62',
             barBorderRadius: [5, 5, 0, 0],
@@ -624,7 +624,7 @@ export default {
           },
           barWidth: '20',  //宽度
           barCategoryGap: '20%',  //间距
-          data: [4521, 700, 8000, 5020],
+          data: [this.itemData['药品费申报金额_SUM'], this.itemData['检查费申报金额_SUM'], this.itemData['治疗费申报金额_SUM'], this.itemData['床位费申报金额_SUM']],
           itemStyle: {
             color: '#0fae14',
             barBorderRadius: [5, 5, 0, 0],

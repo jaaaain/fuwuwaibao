@@ -109,7 +109,12 @@ export default {
             data: [
               { value: this.count0, name: '非骗保' },
               { value: this.count1, name: '骗保' }
-            ]
+            ],
+            label: {
+              textStyle: {
+                color: '#aaa', // 设置标签文本颜色
+              }
+            }
           }
         ]
       };
@@ -196,7 +201,7 @@ export default {
             color: 'green',
             barBorderRadius: [5, 5, 0, 0],
           },
-          barWidth: '10',  //宽度
+          barWidth: '30',  //宽度
           barCategoryGap: '20%',  //间距
           data: [this.count00000to10000, this.count10000to20000, this.count20000to30000, this.count30000to]
         }]
@@ -235,7 +240,12 @@ export default {
               { value: this.risk1, name: '低风险' },
               { value: this.risk2, name: '中风险' },
               { value: this.risk3, name: '高风险' }
-            ]
+            ],
+            label: {
+              textStyle: {
+                color: '#aaa', // 设置标签文本颜色
+              }
+            }
           }
         ]
       };
@@ -296,7 +306,7 @@ export default {
           radius: '60%',
           name: {
             textStyle: {
-              color: 'white'
+              color: '#aaa'
             }
           }
         },
@@ -312,41 +322,13 @@ export default {
 
     },
     handleChart5() {
-      // 初始化 ECharts 实例
-      console.log('读取成功');
       const chartInstance = echarts.init(document.getElementById("Chart5"));
-      this.amountmax = this.sumList.reduce((max, item) => {
-        // 检查当前项目的审批金额是否大于已知的最大值
-        if (item['本次审批金额_SUM'] > max) {
-          return item['本次审批金额_SUM']; // 如果是，则返回当前项目的审批金额作为新的最大值
-        } else {
-          return max; // 如果不是，则保持已知的最大值不变
-        }
-      }, 0); // 初始值设为 0
-      this.daymax = this.sumList.reduce((max, item) => {
-        // 检查当前项目的审批金额是否大于已知的最大值
-        if (item['就诊次数_SUM'] > max) {
-          return item['就诊次数_SUM']; // 如果是，则返回当前项目的审批金额作为新的最大值
-        } else {
-          return max; // 如果不是，则保持已知的最大值不变
-        }
-      }, 0); // 初始值设为 0
-      // 计算欺诈成功的数据
-      this.FraudData = this.sumList.filter(item => item.RES === 1);
-      console.log(this.FraudData);
-      this.fraudmax = this.FraudData.reduce((max, item) => {
-        // 检查当前项目的审批金额是否大于已知的最大值
-        if (item['本次审批金额_SUM'] > max) {
-          return item['本次审批金额_SUM']; // 如果是，则返回当前项目的审批金额作为新的最大值
-        } else {
-          return max; // 如果不是，则保持已知的最大值不变
-        }
-      }, 0); // 初始值设为 0
-      // 在格式化函数外部定义一个变量来存储 this.FraudData
-      // 设置图表配置
+      this.sumList.sort((a, b) => b.feature - a.feature);
+      const topFive = this.sumList.slice(0, 5);
+      console.log(topFive);
       const options = {
         title: {
-          text: '最大值展示', // 根据需要更改标题
+          text: '骗保TOP5', // 根据需要更改标题
           x: 'center',
           textStyle: {
             fontSize: 18,
@@ -372,11 +354,9 @@ export default {
         },
         yAxis: {
           type: 'category',
-          data: ['最大统筹金', '最大就诊天数', '最大欺诈金额'], // 设置 y 轴数据
+          data: ['5', '4', '3', '2', '1'], // 设置 y 轴数据
           axisLine: {
-            lineStyle: {
-              color: 'white' // 设置 y 轴颜色为白色
-            }
+            show: false // 隐藏 x 轴线
           },
           axisLabel: {
             color: 'white' // 设置 y 轴标签颜色为白色
@@ -396,9 +376,42 @@ export default {
         },
         series: [{
           type: 'bar',
-          data: [this.amountmax, this.daymax, this.fraudmax], // 设置柱状图数据
+          barWidth: '30',  //宽度
+          radius: '50%',
+          data: [topFive[1]['本次审批金额_SUM'], topFive[3]['本次审批金额_SUM'], topFive[4]['本次审批金额_SUM'], topFive[0]['本次审批金额_SUM'], topFive[2]['本次审批金额_SUM']], // 设置柱状图数据
           itemStyle: {
-            color: '#2ecc71' // 设置柱状图颜色为绿色
+            color: function (params) {
+              let colorList = [
+                ['#009c41', '#b2dcb6'],
+                ['#7da47c', '#62bd69'],
+                ['#476f4d', '#e8f9df'],
+                ['#4a6c4c', '#c6cc54'],
+                ['#365c3b', '#abd0a7'],
+              ];
+              let colorItem = colorList[params.dataIndex];
+              return new echarts.graphic.LinearGradient(0, 0, 1, 0,
+                [
+                  {
+                    offset: 0,
+                    color: colorItem[0]
+                  },
+                  {
+                    offset: 1,
+                    color: colorItem[1]
+                  }
+                ],
+                false);
+            },            
+            barBorderRadius: [0, 13, 13, 0],
+          },
+          label: {
+            show: true, //开启显示
+            position: 'inside', //在上方显示
+            textStyle: { //数值样式
+              color: '#444',
+              fontSize: 15
+            }
+
           }
         }]
       };

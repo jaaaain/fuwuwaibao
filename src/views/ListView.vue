@@ -166,7 +166,6 @@ export default {
             return this.sumList.filter((item) => {
                 return String(item["个人编码"]).includes(this.searchKeyword.trim());
             });
-
         },
         // 计算当前页需要展示的数据
         displayedItems() {
