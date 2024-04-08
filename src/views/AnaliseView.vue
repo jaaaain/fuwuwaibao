@@ -2,15 +2,50 @@
   <el-container>
     <app-header></app-header>
     <div class="chart-container">
-      <div class="chart" id="Chart1" style="position: absolute; top: 20px; left: 20px;"></div>
-      <div class="chart" id="Chart2" style="position: absolute; top: 20px; right: 20px;"></div>
-      <div class="chart" id="Chart3" style="position: absolute; top: 500px; left: 20px;"></div>
-      <div class="chart" id="Chart5" style="position: absolute; top: 500px; right: 20px;"></div>
-      <div class="chart" id="Chart4" style="position: absolute; top: 250px; left: 50%; transform: translate(-50%, -50%);"></div>
+      <div class="chart">
+        <div id="Chart1"></div>
+        <div id="Chart3"></div>
+      </div>
+      <div class="chart" id="Chart4"></div>
+      <div class="chart">
+        <div id="Chart2"></div>
+        <div id="Chart5"></div>
+      </div>
     </div>
   </el-container>
 
 </template>
+
+<style scoped>
+.chart-container {
+  position: relative;
+  top: 80px;
+  margin: 0 5%;
+  width: 100%;
+  height: 100%;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chart {
+  width: 33%;
+  height: 700px;
+}
+
+#Chart4 {
+  width: 60%;
+  height: 700px;
+}
+
+#Chart1,
+#Chart3,
+#Chart2,
+#Chart5 {
+  width: 100%;
+  height: 50%;
+}
+</style>
 <script>
 import * as echarts from 'echarts';
 import axios from 'axios';
@@ -22,21 +57,19 @@ export default {
   data() {
     return {
       sumList: [],
-      count0: 0,
-      count1: 0
     };
   },
   methods: {
     fetchData() {
       axios.get('http://127.0.0.1:5000/sum_show')
-            .then(Response => {
-                this.sumList = Response.data.sum_show;
-                console.log(this.sumList);
-                this.renderChart();
-            })
-            .catch(error => {
-                console.log("error:", error);
-            });
+        .then(Response => {
+          this.sumList = Response.data.sum_show;
+          console.log(this.sumList);
+          this.renderChart();
+        })
+        .catch(error => {
+          console.log("error:", error);
+        });
 
     },
     renderChart() {
@@ -65,8 +98,8 @@ export default {
           },
         },
         tooltip: {
-            trigger: 'item',
-            formatter: '{b}: {c} ({d}%)'  // 提示框内容格式
+          trigger: 'item',
+          formatter: '{b}: {c} ({d}%)'  // 提示框内容格式
         },
         color: ['#ff7f50', '#87cefa'],
         series: [
@@ -94,11 +127,11 @@ export default {
       var option = {
         title: {
           text: '审批金额分析',
+          x: 'center',
           textStyle: {
             fontSize: 18,
             color: 'white'
           },
-          padding: [10, 0, 100, 100]  //设置标题位置，用padding属性来定位
         },
         legend: {  //配置图例
           type: 'scroll',
@@ -165,7 +198,7 @@ export default {
           },
           barWidth: '10',  //宽度
           barCategoryGap: '20%',  //间距
-          data: [this.count00000to10000,this.count10000to20000,this.count20000to30000,this.count30000to]
+          data: [this.count00000to10000, this.count10000to20000, this.count20000to30000, this.count30000to]
         }]
       };
       myChart.setOption(option);
@@ -174,9 +207,9 @@ export default {
       // 初始化 ECharts 实例
       const chartInstance = echarts.init(document.getElementById("Chart3"));
       // 计算 低中高风险 的数量
-      this.risk1 = this.sumList.filter(item => item.risk >= 0  && item.risk<=0.3).length;
-      this.risk2 = this.sumList.filter(item => item.risk >0.3  && item.risk<=0.6).length;
-      this.risk3 = this.sumList.filter(item => item.risk >0.6  && item.risk<1).length;
+      this.risk1 = this.sumList.filter(item => item.risk >= 0 && item.risk <= 0.3).length;
+      this.risk2 = this.sumList.filter(item => item.risk > 0.3 && item.risk <= 0.6).length;
+      this.risk3 = this.sumList.filter(item => item.risk > 0.6 && item.risk < 1).length;
       console.log(this.risk1);
       console.log(this.risk2);
       // 设置图表配置
@@ -190,8 +223,8 @@ export default {
           },
         },
         tooltip: {
-            trigger: 'item',
-            formatter: '{b}: {c} ({d}%)'  // 提示框内容格式
+          trigger: 'item',
+          formatter: '{b}: {c} ({d}%)'  // 提示框内容格式
         },
         color: ['#ff7f50', '#87cefa', 'purple'],
         series: [
@@ -228,6 +261,7 @@ export default {
       const options = {
         title: {
           text: '欺诈金额展示', // 根据需要更改标题
+          x: 'center',
           textStyle: {
             fontSize: 18,
             color: 'white'
@@ -269,15 +303,15 @@ export default {
         series: [{
           type: 'radar',
           data: [
-          { value: [this.count00000to5000, this.count5000to10000 , this.count10000to15000, this.count15000to20000, this.count20000to] } // 这里是一个对象，包含了五个维度的数据
-        ]
+            { value: [this.count00000to5000, this.count5000to10000, this.count10000to15000, this.count15000to20000, this.count20000to] } // 这里是一个对象，包含了五个维度的数据
+          ]
         }]
       };
       // 使用 chartInstance 渲染图表
       chartInstance.setOption(options); // 设置图表配置
 
     },
-      handleChart5() {
+    handleChart5() {
       // 初始化 ECharts 实例
       console.log('读取成功');
       const chartInstance = echarts.init(document.getElementById("Chart5"));
@@ -313,6 +347,7 @@ export default {
       const options = {
         title: {
           text: '最大值展示', // 根据需要更改标题
+          x: 'center',
           textStyle: {
             fontSize: 18,
             color: 'white'
@@ -376,20 +411,3 @@ export default {
   },//生命周期 - 挂载完成
 };
 </script>
-<style scoped>
-.chart-container {
-  position: relative;
-  top: 80px;
-  margin: 0 5%;
-  width: 100%;
-  height: 100%;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-}
-
-.chart {
-  width: 33%;
-  height: 500px;
-}
-</style>
