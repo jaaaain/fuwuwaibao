@@ -7,7 +7,7 @@
         <router-link class="el-icon-close" to="/"></router-link>
       </div>
       <div class="container">
-        <table id="fileTable">
+        <table id="fileTable" v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.2)">
           <thead>
             <tr>
               <th>文件名称</th>
@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       fileList: [],
+      loading: false
     };
   },
   methods: {
@@ -67,6 +68,7 @@ export default {
     },
     // 上传文件
     uploadFiles() {
+      this.loading = true;
       if (this.fileList.length == 0) {
         alert("文件为空，请选择要上传的文件");
         return; // 停止执行
@@ -98,6 +100,7 @@ export default {
         this.$router.push("/predict");
       }).catch(error => {
         console.error('文件上传失败：', error);
+        this.loading = false;
       });
 
 
