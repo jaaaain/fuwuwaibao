@@ -138,9 +138,9 @@ export default {
     fetchData() {
       this.personalCode = this.$route.params.personalCode;
       // 根据个人编码从 sessionStorage 中获取对应的数据
-      const sumList = JSON.parse(localStorage.getItem('sumList')) || [];
-      console.log(sumList)
-      this.itemData = sumList.find(item => item['个人编码'] == this.personalCode) || {};
+      const specificData = JSON.parse(localStorage.getItem('specificData')) || [];
+      console.log(specificData)
+      this.itemData =specificData
       console.log(this.itemData)
       this.renderChart();
     },

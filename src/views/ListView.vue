@@ -142,18 +142,20 @@ export default {
             this.currentPage = val;
         },
         toItemDetail(item) {
-            this.$router.push(`list/item/${item['个人编码']}`);
+            const personalCode = item['个人编码'];
+            // 根据个人编码获取特定数据，这里假设从 sumList 中获取
+            const specificData = this.sumList.find(data => data['个人编码'] === personalCode);
+            // 存储特定数据到本地存储
+            localStorage.setItem('specificData', JSON.stringify(specificData));
+            // 导航到新路由
+            this.$router.push(`list/item/${personalCode}`);
         },
     },//方法集合
     mounted() {
         axios.get('http://127.0.0.1:5000/sum_show')
             .then(Response => {
-                if (localStorage.getItem('sumList')) {
-                    localStorage.removeItem('sumList');
-                }
                 this.sumList = Response.data.sum_show;
                 console.log(this.sumList);
-                localStorage.setItem('sumList', JSON.stringify(this.sumList));
             })
             .catch(error => {
                 console.log("error:", error);
