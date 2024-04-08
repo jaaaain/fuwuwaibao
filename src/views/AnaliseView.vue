@@ -235,7 +235,7 @@ export default {
         series: [
           {
             type: 'pie',
-            radius: '50%',
+            radius: ['50%', '70%'], // 外半径为 70%，内半径为 50%，实现圆环效果
             data: [
               { value: this.risk1, name: '低风险' },
               { value: this.risk2, name: '中风险' },
@@ -290,7 +290,7 @@ export default {
             for (let i = 0; i < params.value.length; i++) {
               result += '维度' + (i + 1) + '数量：' + params.value[i] + '<br/>'; // 显示当前维度的数量
             }
-            result += '欺诈金额总和：' + totalAmount; // 显示欺诈金额的数量总和
+            result += '欺诈金额总和：' + totalAmount+'元'; // 显示欺诈金额的数量总和
             return result;
           }
         },

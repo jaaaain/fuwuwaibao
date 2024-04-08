@@ -13,24 +13,24 @@
           <div class="item">
             <div class="label">参保个体 {{ itemData['个人编码'] }}</div>
             <span class="data">本次审批金额: {{ itemData['本次审批金额_SUM'] }} 元</span>
-            <span class="data">是否挂号: {{ itemData['是否挂号'] === 1 ? '是' : '否' }}</span>
+            <span class="data">是否欺诈: {{ itemData['RES'] === 1 ? '是' : '否' }}</span>
             <br>
             <span class="data">是否民政救助: {{ itemData['BZ_民政救助'] === 1 ? '是' : '否' }}</span>
             <span class="data">是否城乡优抚: {{ itemData['BZ_城乡优抚'] === 1 ? '是' : '否' }}</span>
             <br>
-            <span class="data">月就诊次数: {{ itemData['月就诊次数_MAX'] }} 次</span>
+            <span class="data">就诊次数: {{ itemData['就诊次数_SUM'] }} 次</span>
 
           </div>
         </div>
         <div class="item-data">
-          <span class="data">月就诊天数MAX: {{ itemData['月就诊天数_MAX'] }}</span>
-          <span class="data">月就诊天数AVG: {{ itemData['月就诊天数_AVG'] }}</span>
+          <span class="data">月就诊天数MAX: {{ itemData['月就诊天数_MAX'] }}天</span>
+          <span class="data">月就诊天数AVG: {{ itemData['月就诊天数_AVG'] }}天</span>
           <br><br>
-          <span class="data">月就诊医院数MAX: {{ itemData['月就诊医院数_MAX'] }}</span>
-          <span class="data">月就诊医院数AVG: {{ itemData['月就诊医院数_AVG'] }}</span>
+          <span class="data">月就诊医院数MAX: {{ itemData['月就诊医院数_MAX'] }}个</span>
+          <span class="data">月就诊医院数AVG: {{ itemData['月就诊医院数_AVG'] }}个</span>
           <br><br>
-          <span class="data">月就诊次数MAX: {{ itemData['月就诊次数_MAX'] }}</span>
-          <span class="data">月就诊次数AVG: {{ itemData['月就诊次数_AVG'] }}</span>
+          <span class="data">月就诊次数MAX: {{ itemData['月就诊次数_MAX'] }}次</span>
+          <span class="data">月就诊次数AVG: {{ itemData['月就诊次数_AVG'] }}次</span>
         </div>
       </div>
       <div class="data-container">

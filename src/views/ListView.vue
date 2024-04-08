@@ -15,7 +15,7 @@
                         <span class="data">是否民政救助: {{ item['BZ_民政救助'] === 1 ? '是' : '否' }}</span>
                         <span class="data">是否城乡优抚: {{ item['BZ_城乡优抚'] === 1 ? '是' : '否' }}</span>
                         <br>
-                        <span class="data">月就诊次数: {{ item['月就诊次数_MAX'] }} 次</span>
+                        <span class="data">就诊次数: {{ item['就诊次数_SUM'] }} 次</span>
                     </div>
                 </el-card>
             </div>
