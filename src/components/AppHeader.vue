@@ -1,7 +1,9 @@
 <template>
   <header>
     <el-header class="header">
-      <router-link to="/" class="logo">AABL</router-link>
+       <router-link to="/" class="logo">
+        <img src="/logo.png" alt="Logo" class="logo-image">
+      </router-link>
       <ul class="navigation">
         <li :class="{ 'active': $route.path === '/' }"><router-link to="/">首页</router-link></li>
         <li :class="{ 'active': $route.path === '/predict/details' }"><router-link to="/predict/details">骗保详情</router-link></li>
@@ -25,6 +27,13 @@
   color: white;
   padding-bottom: 6px;
   border-bottom: 3px solid white;
+}
+.logo-image {
+  width: 130px; /* 设置图片宽度 */
+  height: auto; /* 根据宽度等比例缩放高度 */
+  margin-top: 80px; /* 向下移动 20 像素 */
+  margin-left: -80px; /* 向右移动 20 像素 */
+
 }
 </style>
 
