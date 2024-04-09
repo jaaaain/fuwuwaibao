@@ -32,7 +32,7 @@
   width: 130px; /* 设置图片宽度 */
   height: auto; /* 根据宽度等比例缩放高度 */
   margin-top: 80px; /* 向下移动 20 像素 */
-  margin-left: -80px; /* 向右移动 20 像素 */
+  margin-left: -160px; /* 向右移动 20 像素 */
 
 }
 </style>
