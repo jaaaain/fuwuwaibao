@@ -68,7 +68,7 @@ export default {
     },
     // 上传文件
     uploadFiles() {
-      this.loading = true;
+
       if (this.fileList.length == 0) {
         alert("文件为空，请选择要上传的文件");
         return; // 停止执行
@@ -77,6 +77,7 @@ export default {
         alert("文件复数，请逐个上传文件");
         return; // 停止执行
       }
+      this.loading = true;
       let allFilesAreCsv = true;
       const formData = new FormData(); // 创建 FormData 对象
       this.fileList.forEach((fileInfo) => {
