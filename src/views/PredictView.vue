@@ -12,7 +12,7 @@
           <thead>
             <tr>
               <th>ID</th>
-              <th>预测结果</th>
+              <th>是否欺诈</th>
               <th>就诊次数</th>
               <th>统筹金</th>
             </tr>
@@ -20,7 +20,7 @@
           <tbody id="predictList">
             <tr v-for="(item, index) in filteredPredictList" :key="index">
               <td>{{ index }}</td>
-              <td>{{ item.RES }}</td>
+              <td>{{ item['RES'] === 1 ? '是' : '否' }}</td>
               <td>{{ item['就诊次数_SUM']}}</td>
               <td>{{ item['本次审批金额_SUM'] }}</td>
             </tr>
@@ -48,13 +48,15 @@ export default {
   },
   methods: {
     // 下载结果文件
-    downloadFile() {
+    downloadFile(){
       this.downloading = true; // 设置下载状态为true
       axios({
         url: 'http://localhost:5000/download-file', // 后端提供的下载文件路由
         method: 'GET',
       }).then(response => {
-        const fileContent = atob(response.data.file_content);
+        const coder = Uint8Array.from(atob(response.data.file_content), c => c.charCodeAt(0));
+        const decoder = new TextDecoder('utf-8');
+        const fileContent = decoder.decode(coder);
         const fileName = response.data.file_name;
         const blob = new Blob([fileContent], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
@@ -69,7 +71,7 @@ export default {
         console.error('Error downloading file:', error);
         this.downloading = false; // 下载出错时也需要将下载状态设为false
       });
-    },
+    }
   },
   mounted() {
     axios.get('http://127.0.0.1:5000/result ')
