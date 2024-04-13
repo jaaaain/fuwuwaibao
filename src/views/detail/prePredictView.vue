@@ -61,9 +61,9 @@ export default {
             if (acount >= 0 && acount <= 5000) {
                 return '低金额';
             } else if (acount > 5000 && acount < 10000) {
-                return '中风险';
+                return '中金额';
             } else {
-                return '高风险';
+                return '高金额';
             }
         }
     },//方法集合
