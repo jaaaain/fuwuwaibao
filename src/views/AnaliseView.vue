@@ -242,16 +242,19 @@ export default {
           textStyle: { fontSize: 18, color: 'white' }
         },
         tooltip: {
-          trigger: 'item',
-          formatter(params) {
-            let result = `${params.name}<br/>`;
-            for (let i = 0; i < params.value.length; i++) {
-              result += `${ranges[i].name}数量：${params.value[i]}<br/>`;
-            }
-            result += `欺诈金额总和：${totalAmount}元`;
-            return result;
-          }
-        },
+              trigger: 'item',
+              formatter(params) {
+                let result = '';
+                if (params.name) {
+                  result += `${params.name}<br/>`;
+                }
+                for (let i = 0; i < params.value.length; i++) {
+                  result += `${ranges[i].name}数量：${params.value[i]}<br/>`;
+                }
+                result += `欺诈金额总和：${totalAmount}元`;
+                return result;
+              }
+            },
         radar: {
           indicator: ranges.map(range => ({ name: range.name, max: Math.max(...counts) })),
           center: ['50%', '50%'],
