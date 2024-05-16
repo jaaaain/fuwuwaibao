@@ -237,12 +237,12 @@ export default {
 
       return {
         title: {
-          text: '欺诈金额展示',
+          text: '欺诈金额分布',
           x: 'center',
           textStyle: { fontSize: 18, color: 'white' }
         },
         tooltip: {
-              trigger: 'item',
+           trigger: 'item',
               formatter(params) {
                 let result = '';
                 if (params.name) {
@@ -347,23 +347,35 @@ export default {
       };
     },
     getChart6Options() {
+      const totalRecords = this.sumList.length;
       const totalFraudRecords = this.sumList.filter(item => item.RES === 1).length;
-      let totalFraudAmount = 0;
-      this.sumList.forEach(item => {
-        if (item.RES === 1) {
-          totalFraudAmount += item['本次审批金额_SUM'];
-        }
-      });
-      totalFraudAmount = totalFraudAmount.toFixed(0);
+      const totalFraudAmount = this.sumList
+        .filter(item => item.RES === 1)
+        .reduce((sum, item) => sum + item['本次审批金额_SUM'], 0)
+        .toFixed(0);
+
+      const totalAmount = this.sumList
+        .reduce((sum, item) => sum + item['本次审批金额_SUM'], 0)
+        .toFixed(0);
+
+      // 计算欺诈记录和欺诈金额的比例
+      const fraudRecordsPercentage = ((totalFraudRecords / totalRecords) * 100).toFixed(2);
+      const fraudAmountPercentage = ((totalFraudAmount / totalAmount) * 100).toFixed(2);
 
       return {
         title: {
-          text: '总共的欺诈记录和金额',
+          text: '总欺诈记录与金额',
           x: 'center',
-          textStyle: {fontSize: 18, color: 'white'}
+          textStyle: { fontSize: 18, color: 'white' }
         },
         tooltip: {
-          formatter: '{a} <br/>{b} : {c}'
+          formatter: function (params) {
+            if (params.seriesName === '欺诈记录总数') {
+              return `${params.seriesName}<br/>数量: ${totalFraudRecords}`;
+            } else {
+              return `${params.seriesName}<br/>金额: ${totalFraudAmount} 元`;
+            }
+          }
         },
         series: [
           {
@@ -372,7 +384,7 @@ export default {
             center: ['25%', '55%'],
             radius: '50%',
             min: 0,
-            max: 1000,  // 可以根据实际数据调整最大值
+            max: 100,  // 百分比最大值
             splitNumber: 10,
             axisLine: {
               lineStyle: {
@@ -384,13 +396,16 @@ export default {
               width: 5
             },
             detail: {
-              formatter: '{value}',
+              formatter: function (value) {
+                return `${totalFraudRecords} 条`;
+              },
+              offsetCenter: [0, '80%'], // 调整文字向下移动
               textStyle: {
                 color: 'white',
                 fontSize: 20
               }
             },
-            data: [{value: totalFraudRecords, name: '欺诈记录'}]
+            data: [{ value: fraudRecordsPercentage, name: '欺诈记录' }]
           },
           {
             name: '欺诈金额总数',
@@ -398,7 +413,7 @@ export default {
             center: ['75%', '55%'],
             radius: '50%',
             min: 0,
-            max: 1000000,  // 可以根据实际数据调整最大值
+            max: 100,  // 百分比最大值
             splitNumber: 10,
             axisLine: {
               lineStyle: {
@@ -410,17 +425,22 @@ export default {
               width: 5
             },
             detail: {
-              formatter: '{value} 元',
+              formatter: function (value) {
+                return `${totalFraudAmount} 元`;
+              },
+              offsetCenter: [0, '80%'], // 调整文字向下移动
               textStyle: {
                 color: 'white',
                 fontSize: 20
               }
             },
-            data: [{value: totalFraudAmount, name: '欺诈金额'}]
+            data: [{ value: fraudAmountPercentage, name: '欺诈金额' }]
           }
         ]
       };
     }
+
+
   },
   mounted() {
     this.fetchData();
