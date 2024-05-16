@@ -222,52 +222,48 @@ export default {
     },
     getChart4Options() {
       const fraudData = this.sumList.filter(item => item.RES === 1);
-      const count00000to5000 = fraudData.filter(item => item['本次审批金额_SUM'] >= 0 && item['本次审批金额_SUM'] < 5000).length;
-      const count5000to10000 = fraudData.filter(item => item['本次审批金额_SUM'] >= 5000 && item['本次审批金额_SUM'] < 15000).length;
-      const count10000to15000 = fraudData.filter(item => item['本次审批金额_SUM'] >= 10000 && item['本次审批金额_SUM'] < 15000).length;
-      const count15000to20000 = fraudData.filter(item => item['本次审批金额_SUM'] >= 15000 && item['本次审批金额_SUM'] < 20000).length;
-      const count20000to = fraudData.filter(item => item['本次审批金额_SUM'] >= 20000).length;
+      const ranges = [
+        { name: '0000~5000', min: 0, max: 5000 },
+        { name: '5000~10000', min: 5000, max: 10000 },
+        { name: '10000~15000', min: 10000, max: 15000 },
+        { name: '15000~20000', min: 15000, max: 20000 },
+        { name: '20000~', min: 20000, max: Infinity }
+      ];
+      const counts = ranges.map(range =>
+        fraudData.filter(item => item['本次审批金额_SUM'] >= range.min && item['本次审批金额_SUM'] < range.max).length
+      );
+
+      const totalAmount = fraudData.reduce((sum, item) => sum + item['本次审批金额_SUM'], 0).toFixed(0);
 
       return {
         title: {
           text: '欺诈金额展示',
           x: 'center',
-          textStyle: {fontSize: 18, color: 'white'},
+          textStyle: { fontSize: 18, color: 'white' }
         },
         tooltip: {
           trigger: 'item',
           formatter(params) {
-            let totalAmount = 0;
-            fraudData.forEach(item => {
-              totalAmount += item['本次审批金额_SUM'];
-            });
-            totalAmount = totalAmount.toFixed(0);
             let result = `${params.name}<br/>`;
             for (let i = 0; i < params.value.length; i++) {
-              result += `维度${i + 1}数量：${params.value[i]}<br/>`;
+              result += `${ranges[i].name}数量：${params.value[i]}<br/>`;
             }
             result += `欺诈金额总和：${totalAmount}元`;
             return result;
           }
         },
         radar: {
-          indicator: [
-            {name: '0000~'},
-            {name: '5000~'},
-            {name: '10000~'},
-            {name: '15000~'},
-            {name: '20000~'}
-          ],
+          indicator: ranges.map(range => ({ name: range.name, max: Math.max(...counts) })),
           center: ['50%', '50%'],
           radius: '60%',
           name: {
-            textStyle: {color: '#aaa'}
+            textStyle: { color: '#aaa' }
           }
         },
         series: [{
           type: 'radar',
           data: [
-            {value: [count00000to5000, count5000to10000, count10000to15000, count15000to20000, count20000to]}
+            { value: counts }
           ]
         }]
       };
@@ -279,14 +275,14 @@ export default {
         title: {
           text: '骗保TOP5',
           x: 'center',
-          textStyle: {fontSize: 18, color: 'white'}
+          textStyle: { fontSize: 18, color: 'white' }
         },
         tooltip: {
           trigger: 'axis',
-          axisPointer: {type: 'shadow'},
+          axisPointer: { type: 'shadow' },
           formatter(params) {
             let result = `${params[0].name}<br/>`;
-            result += params[0].value.toFixed(2);
+            result += `${params[0].value.toFixed(2)}元`;
             return result;
           }
         },
@@ -299,20 +295,26 @@ export default {
         yAxis: {
           type: 'category',
           data: ['5', '4', '3', '2', '1'],
-          axisLine: {show: false},
-          axisLabel: {color: 'white'}
+          axisLine: { show: false },
+          axisLabel: { color: 'white' }
         },
         xAxis: {
           type: 'value',
-          axisLine: {show: false},
-          axisLabel: {show: false},
-          splitLine: {show: false}
+          axisLine: { show: false },
+          axisLabel: { show: false },
+          splitLine: { show: false }
         },
         series: [{
           type: 'bar',
           barWidth: '30',
           radius: '50%',
-          data: [topFive[1]['本次审批金额_SUM'], topFive[3]['本次审批金额_SUM'], topFive[4]['本次审批金额_SUM'], topFive[0]['本次审批金额_SUM'], topFive[2]['本次审批金额_SUM']],
+          data: [
+            topFive[1]['本次审批金额_SUM'],
+            topFive[3]['本次审批金额_SUM'],
+            topFive[4]['本次审批金额_SUM'],
+            topFive[0]['本次审批金额_SUM'],
+            topFive[2]['本次审批金额_SUM']
+          ],
           itemStyle: {
             color(params) {
               const colorList = [
@@ -324,8 +326,8 @@ export default {
               ];
               const colorItem = colorList[params.dataIndex];
               return new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                {offset: 0, color: colorItem[0]},
-                {offset: 1, color: colorItem[1]}
+                { offset: 0, color: colorItem[0] },
+                { offset: 1, color: colorItem[1] }
               ], false);
             },
             barBorderRadius: [0, 13, 13, 0],
@@ -333,7 +335,10 @@ export default {
           label: {
             show: true,
             position: 'inside',
-            textStyle: {color: '#444', fontSize: 15}
+            formatter: function (params) {
+              return `${params.value.toFixed(2)}元`;
+            },
+            textStyle: { color: '#444', fontSize: 15 }
           }
         }]
       };
