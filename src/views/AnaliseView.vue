@@ -132,64 +132,99 @@ export default {
         ]
       };
     },
-    getChart2Options() {
-      const count00000to10000 = this.sumList.filter(item => item['本次审批金额_SUM'] >= 0 && item['本次审批金额_SUM'] < 10000).length;
-      const count10000to20000 = this.sumList.filter(item => item['本次审批金额_SUM'] >= 10000 && item['本次审批金额_SUM'] < 20000).length;
-      const count20000to30000 = this.sumList.filter(item => item['本次审批金额_SUM'] >= 20000 && item['本次审批金额_SUM'] < 30000).length;
-      const count30000to = this.sumList.filter(item => item['本次审批金额_SUM'] >= 30000).length;
+getChart2Options() {
+  // 筛选出欺诈数据
+  const fraudData = this.sumList.filter(item => item.RES === 1);
 
-      return {
-        title: {
-          text: '审批金额分析',
-          x: 'center',
-          textStyle: {fontSize: 18, color: 'white'},
-        },
-        legend: {
-          type: 'scroll',
-          top: '1%',
-          textStyle: {color: 'white'},
-          data: [{name: '数量', icon: 'circle'}]
-        },
-        tooltip: {
-          trigger: 'item',
-          axisPointer: {type: 'shadow', axis: 'auto'},
-          padding: 5,
-          textStyle: {color: "green"},
-        },
-        xAxis: {
-          offset: 10,
-          name: '数值',
-          nameGap: 15,
-          type: 'category',
-          axisLabel: {interval: 0, rotate: 30},
-          data: ['0~10000', '10000~20000', '20000~30000', '30000~']
-        },
-        yAxis: {
-          type: 'value',
-          offset: 1,
-          name: '数量',
-          nameGap: 15,
-          axisLine: {
-            show: true,
-            symbol: ['none', 'arrow'],
-            symbolSize: [8, 8],
-            symbolOffset: [0, 7],
-          },
-          splitLine: {
-            lineStyle: {color: '#666', type: 'dashed'},
-          },
-        },
-        series: [{
-          type: 'bar',
-          legendHoverLink: true,
-          label: {show: false},
-          itemStyle: {color: 'green', barBorderRadius: [5, 5, 0, 0]},
-          barWidth: '30',
-          barCategoryGap: '20%',
-          data: [count00000to10000, count10000to20000, count20000to30000, count30000to]
-        }]
-      };
+  // 计算每种费用的总金额，单位换算为万
+  const totalDrugCost = (fraudData.reduce((sum, item) => sum + (item['药品费申报金额_SUM'] || 0), 0) / 10000).toFixed(0);
+  const totalBedCost = (fraudData.reduce((sum, item) => sum + (item['床位费申报金额_SUM'] || 0), 0) / 10000).toFixed(0);
+  const totalExamCost = (fraudData.reduce((sum, item) => sum + (item['检查费申报金额_SUM'] || 0), 0) / 10000).toFixed(0);
+  const totalTreatmentCost = (fraudData.reduce((sum, item) => sum + (item['治疗费申报金额_SUM'] || 0), 0) / 10000).toFixed(0);
+
+  // 计算总金额
+  const totalAmount = parseFloat(totalDrugCost) + parseFloat(totalBedCost) + parseFloat(totalExamCost) + parseFloat(totalTreatmentCost);
+
+  // 将数据放入数组
+  const data = [
+    { name: '药品费', value: totalDrugCost },
+    { name: '床位费', value: totalBedCost },
+    { name: '检查费', value: totalExamCost },
+    { name: '治疗费', value: totalTreatmentCost }
+  ];
+
+  return {
+    title: {
+      text: '欺诈费用分布',
+      x: 'center',
+      textStyle: { fontSize: 18, color: 'white' }
     },
+    tooltip: {
+      trigger: 'item',
+      formatter: function (params) {
+        const percentage = ((params.value / totalAmount) * 100).toFixed(2);
+        return `${params.name}: ${params.value}万 (${percentage}%)`;
+      },
+      backgroundColor: 'rgba(50, 50, 50, 0.7)', // 背景颜色
+      textStyle: { color: '#fff' }, // 文字颜色
+      borderWidth: 1,
+      borderColor: '#777'
+    },
+    xAxis: {
+      type: 'category',
+      data: data.map(item => item.name),
+      axisLabel: { color: 'white' },
+      axisLine: { lineStyle: { color: '#aaa' } }, // 坐标轴颜色
+      axisTick: { show: false }
+    },
+    yAxis: {
+          type: 'value',
+          axisLabel: { color: 'white' },
+          axisLine: { lineStyle: { color: '#aaa' } }, // 坐标轴颜色
+          splitLine: {
+            show: true,
+            lineStyle: {
+              color: '#666', // 调整颜色为更浅灰色以确保可见
+              type: 'dashed', // 设置分割线为虚线
+              width: 1 // 调整虚线的宽度
+            }
+          }
+        },
+    series: [
+      {
+        type: 'bar',
+        data: data.map(item => parseFloat(item.value)),
+        itemStyle: {
+          color: function (params) {
+            const colors = ['#ff7f50', '#87cefa', '#da70d6', '#32cd32'];
+            return colors[params.dataIndex];
+          },
+          barBorderRadius: [3, 3, 0, 0], // 圆角
+          shadowColor: 'rgba(0, 0, 0, 0.5)', // 阴影颜色
+          shadowBlur: 10 // 阴影模糊
+        },
+        label: {
+          show: true,
+          position: 'top',
+          formatter: '{c}万',
+          color: 'white',
+          textStyle: { fontSize: 14 }
+        },
+        emphasis: {
+          itemStyle: {
+            color: '#FFD700' // 高亮时的颜色
+          }
+        }
+      }
+    ],
+    grid: {
+      left: '3%',
+      right: '3%',
+      bottom: '3%',
+      containLabel: true
+    }
+  };
+},
     getChart3Options() {
       const risk1 = this.sumList.filter(item => item.risk >= 0 && item.risk <= 0.3).length;
       const risk2 = this.sumList.filter(item => item.risk > 0.3 && item.risk <= 0.6).length;
