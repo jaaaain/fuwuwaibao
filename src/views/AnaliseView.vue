@@ -396,7 +396,7 @@ export default {
               width: 5
             },
             detail: {
-              formatter: function (value) {
+              formatter: function () {
                 return `${totalFraudRecords} 条`;
               },
               offsetCenter: [0, '80%'], // 调整文字向下移动
@@ -425,7 +425,7 @@ export default {
               width: 5
             },
             detail: {
-              formatter: function (value) {
+              formatter: function () {
                 return `${totalFraudAmount} 元`;
               },
               offsetCenter: [0, '80%'], // 调整文字向下移动

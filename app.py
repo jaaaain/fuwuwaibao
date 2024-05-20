@@ -113,10 +113,9 @@ def handle_data(file):
         X = df_temper[['月统筹金额_MAX','本次审批金额_SUM','ALL_SUM','月就诊次数_MAX','月就诊天数_SUM']]
         # 进行预测
         predictions = model.predict(X)
-        # 将预测结果添加到原始文件中
+        # 将预测结果添加到原始文件和临时文件中
         df['RES'] = predictions
-        # 二次读取
-        df = pd.read_csv(file_path, encoding=result['encoding'])
+        df_temper['RES'] = predictions
         #风险预测
         X = df_temper[['月统筹金额_MAX', '本次审批金额_SUM', 'ALL_SUM', '月就诊次数_MAX', '月就诊天数_SUM','RES']]
         new_X = X[X['RES'] == 0].drop(['RES'], axis=1)
