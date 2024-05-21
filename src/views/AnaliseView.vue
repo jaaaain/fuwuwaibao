@@ -260,7 +260,7 @@ export default {
           trigger: 'item',
           formatter: function (params) {
             const percentage = ((params.value / totalAmount) * 100).toFixed(2);
-            return `${params.name}: ${params.value}万 (${percentage}%) ${params.data.arrow} ${params.data.change}`;
+            return `${params.name}: ${params.value}万 (${percentage}%)`;
           },
           backgroundColor: 'rgba(50, 50, 50, 0.7)', // 背景颜色
           textStyle: { color: '#fff' }, // 文字颜色
